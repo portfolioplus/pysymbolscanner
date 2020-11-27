@@ -1,4 +1,4 @@
-# symbol_scanner
+# pysymbolscanner
 Stock symbol scanner for pytickersymbols repo 
 # install pycurl on macos
 

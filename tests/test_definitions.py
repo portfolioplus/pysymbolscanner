@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-""" symbol_Scanner
+""" pysymbolscanner
   Copyright 2020 Slash Gordon
   Use of this source code is governed by an MIT-style license that
   can be found in the LICENSE file.
@@ -8,7 +8,7 @@
 import unittest
 
 from pytickersymbols import PyTickerSymbols
-from symbol_scanner.index_definitions import Indices
+from pysymbolscanner.index_definitions import Indices
 
 
 class TestDefinitions(unittest.TestCase):

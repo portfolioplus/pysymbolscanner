@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-""" symbol_scanner
+""" pysymbolscanner
   Copyright 2020 Slash Gordon
   Use of this source code is governed by an MIT-style license that
   can be found in the LICENSE file.
@@ -17,13 +17,14 @@ import wptools
 from pytickersymbols import PyTickerSymbols, Statics
 from difflib import SequenceMatcher
 import multiprocessing
-from symbol_scanner.index_definitions import Indices
-from symbol_scanner.scanner import SymbolScanner
-from symbol_scanner.word_score import get_word_list_diff
+from pysymbolscanner.index_definitions import Indices
+from pysymbolscanner.scanner import SymbolScanner
+from pysymbolscanner.word_score import get_word_list_diff
 
 logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
 
+__VERSION__ =  "1.0.0"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

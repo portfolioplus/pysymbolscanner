@@ -1,6 +1,6 @@
 import wikipedia as wp
 import wptools
-from symbol_scanner.word_score import get_best_match
+from pysymbolscanner.word_score import get_best_match
 import re
 import pycountry
 
