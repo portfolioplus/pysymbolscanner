@@ -1,3 +1,9 @@
+![Release Build](https://github.com/portfolioplus/pysymbolscanner/workflows/Release%20Build/badge.svg)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/pysymbolscanner?style=plastic)
+[![Coverage Status](https://coveralls.io/repos/github/portfolioplus/pysymbolscanner/badge.svg?branch=master)](https://coveralls.io/github/portfolioplus/pysymbolscanner?branch=master)
+[![CodeFactor](https://www.codefactor.io/repository/github/portfolioplus/pysymbolscanner/badge)](https://www.codefactor.io/repository/github/portfolioplus/pysymbolscanner)
+
+
 # pysymbolscanner
 Stock symbol scanner for pytickersymbols repo 
 # install pycurl on macos

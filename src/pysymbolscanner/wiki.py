@@ -3,15 +3,18 @@ import wptools
 from pysymbolscanner.word_score import get_best_match
 import re
 import pycountry
-
+import gettext
 
 def get_page(page_search):
     lang_codes = ['en', 'de', 'es', 'fr']
     for lang in lang_codes:
         try:
-            return wptools.page(
-                page_search, lang=lang, silent=True, verbose=False
-            ).get_parse()
+            return (
+                lang,
+                wptools.page(
+                    page_search, lang=lang, silent=True, verbose=False
+                ).get_parse(),
+            )
         except:
             try:
                 wp.set_lang(lang)
@@ -19,9 +22,15 @@ def get_page(page_search):
                 if search:
                     idx, score = get_best_match(page_search, search)
                     if score > 0.75:
-                        return wptools.page(
-                            search[idx], lang=lang, silent=True, verbose=False
-                        ).get_parse()
+                        return (
+                            lang,
+                            wptools.page(
+                                search[idx],
+                                lang=lang,
+                                silent=True,
+                                verbose=False,
+                            ).get_parse(),
+                        )
             except:
                 pass
     return None
@@ -30,7 +39,8 @@ def get_page(page_search):
 def get_infobox(page_search):
     page = get_page(page_search)
     if page:
-        return page.data.get('infobox', None)
+        lang, page = page
+        return lang, page.data.get('infobox', None)
     return None
 
 
@@ -38,6 +48,7 @@ def get_infobox_items(page_search):
     infobox = get_infobox(page_search)
     if not infobox:
         return None
+    lang, infobox = infobox
     founded = infobox.get('foundation', '')
     founded = re.findall(r'\d{4}', founded)
     if not founded:
@@ -52,7 +63,7 @@ def get_infobox_items(page_search):
         loc = infobox.get('hq_location_country', '')
     if not loc:
         loc = infobox.get('location', '')
-    locs = get_countries(loc if loc else str(infobox))
+    locs = get_countries(lang, loc if loc else str(infobox))
     if locs:
         loc = locs[0]
     if employees_items:
@@ -74,8 +85,22 @@ def get_infobox_items(page_search):
     return founded, employees, loc, industry, symbols
 
 
-def get_countries(mystr):
-    items = filter(
-        lambda x: x in mystr, map(lambda cou: cou.name, pycountry.countries)
+def get_countries(loc, mystr):
+    if loc != 'en':
+        german = gettext.translation('iso3166', pycountry.LOCALES_DIR, languages=[loc])
+        german.install()
+    items = list(
+        filter(
+            lambda x: x[0].lower() in mystr.lower()
+            or x[1].lower() == mystr.replace('.', '').lower(),
+            map(
+                lambda cou: (cou.name, cou.alpha_2),
+                pycountry.countries,
+            ),
+        )
     )
-    return list(items)
+    item = None if len(items) > 0 else items[0]
+    if loc != 'en':
+        eng = gettext.translation('iso3166', pycountry.LOCALES_DIR, languages=[loc])
+        eng.install()
+    return item
