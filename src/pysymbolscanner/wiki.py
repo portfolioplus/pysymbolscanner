@@ -5,6 +5,7 @@ import re
 import pycountry
 import gettext
 
+
 def get_page(page_search):
     lang_codes = ['en', 'de', 'es', 'fr']
     for lang in lang_codes:
@@ -63,7 +64,7 @@ def get_infobox_items(page_search):
         loc = infobox.get('hq_location_country', '')
     if not loc:
         loc = infobox.get('location', '')
-    locs = get_countries(lang, loc if loc else str(infobox))
+    locs = get_country(lang, loc if loc else str(infobox))
     if locs:
         loc = locs[0]
     if employees_items:
@@ -85,22 +86,35 @@ def get_infobox_items(page_search):
     return founded, employees, loc, industry, symbols
 
 
-def get_countries(loc, mystr):
+def get_country(loc, mystr):
+    if not mystr:
+        return None
+
     if loc != 'en':
-        german = gettext.translation('iso3166', pycountry.LOCALES_DIR, languages=[loc])
-        german.install()
-    items = list(
-        filter(
-            lambda x: x[0].lower() in mystr.lower()
-            or x[1].lower() == mystr.replace('.', '').lower(),
-            map(
-                lambda cou: (cou.name, cou.alpha_2),
-                pycountry.countries,
-            ),
+        # load language of wiki page
+        lang = gettext.translation(
+            'iso3166', pycountry.LOCALES_DIR, languages=[loc]
         )
+        lang.install()
+        _ = lang.gettext
+        translate = dict(
+            map(
+                lambda x: (_(x.name), (x.name, x.alpha_2)), pycountry.countries
+            )
+        )
+    else:
+        translate = dict(
+            map(lambda x: (x.name, (x.name, x.alpha_2)), pycountry.countries)
+        )
+
+    country = next(
+        filter(
+            lambda key: key.lower() in mystr.lower()
+            or translate[key][1].lower() == mystr.replace('.', '').lower(),
+            translate,
+        ),
+        None,
     )
-    item = None if len(items) > 0 else items[0]
-    if loc != 'en':
-        eng = gettext.translation('iso3166', pycountry.LOCALES_DIR, languages=[loc])
-        eng.install()
-    return item
+    if country:
+        country = translate[country]
+    return country

@@ -8,7 +8,7 @@
 import unittest
 
 from pytickersymbols import PyTickerSymbols
-from pysymbolscanner.wiki import get_infobox_items
+from pysymbolscanner.wiki import get_infobox_items, get_country
 
 class TestWiki(unittest.TestCase):
 
@@ -23,6 +23,29 @@ class TestWiki(unittest.TestCase):
         self.assertEqual(len(items_bmw), 5)
         items_basf = get_infobox_items('BASF')
         self.assertEqual(len(items_basf), 5)
+
+    def test_get_country(self):
+        """
+        Test country detection
+        :return:
+        """
+        country = get_country('en', None)
+        self.assertIsNone(country)
+        country = get_country('en', 'Deutschland')
+        self.assertIsNone(country)
+        country = get_country('en', 'Berlin, Germany')
+        self.assertIsNotNone(country)
+        self.assertEqual(len(country), 2)
+        country, code = country
+        self.assertEqual(country, 'Germany')
+        self.assertEqual(code, 'DE')
+        country = get_country('de', 'Berlin, Deutschland')
+        self.assertIsNotNone(country)
+        self.assertEqual(len(country), 2)
+        country, code = country
+        self.assertEqual(country, 'Germany')
+        self.assertEqual(code, 'DE')
+
 
 
 if __name__ == "__main__":
