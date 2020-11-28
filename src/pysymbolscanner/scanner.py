@@ -16,7 +16,7 @@ import wptools
 from difflib import SequenceMatcher
 import multiprocessing
 from pysymbolscanner.index_definitions import Indices
-from pysymbolscanner.wiki import get_infobox
+from pysymbolscanner.wiki import get_infobox, get_infobox_items
 
 
 class SymbolScanner:
@@ -58,9 +58,21 @@ class SymbolScanner:
         return result
 
     def worker_metadata(self, stock):
-        pass
-
-
+        founded, employees, loc, industry, symbols = get_infobox_items()
+        return {
+                'name': '',
+                'short_name': stock['short_name'],
+                'symbol': symbols,
+                'country': loc,
+                'indices': stock['indices'],
+                'industries': industry,
+                'symbols': symbols,
+                'metadata': {
+                    'founded': founded,
+                    'employees': employees
+                }
+            }
+        
     def start_index(self, stocks):
         pass
 

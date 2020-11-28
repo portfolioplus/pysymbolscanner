@@ -17,12 +17,12 @@ class TestWiki(unittest.TestCase):
         Test wiki infobox
         :return:
         """
-        items_google = get_infobox_items('google')
-        self.assertEqual(len(items_google), 5)
+        items_google = get_infobox_items('Alphabet')
+        self.assertEqual(len(items_google), 6)
         items_bmw = get_infobox_items('BMW')
-        self.assertEqual(len(items_bmw), 5)
+        self.assertEqual(len(items_bmw), 6)
         items_basf = get_infobox_items('BASF')
-        self.assertEqual(len(items_basf), 5)
+        self.assertEqual(len(items_basf), 6)
 
     def test_get_country(self):
         """

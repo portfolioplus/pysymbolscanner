@@ -13,6 +13,13 @@ def get_best_match(word, items):
     return idx, max_score
 
 
+def get_scores(word, items):
+    return map(
+        lambda item: SequenceMatcher(None, word.lower(), item.lower()).ratio(),
+        items,
+    )
+
+
 def get_word_list_diff(words_a, words_b):
     words_a = sorted(words_a)
     words_b = sorted(words_b)
