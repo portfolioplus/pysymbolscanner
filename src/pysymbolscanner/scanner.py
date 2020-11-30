@@ -31,18 +31,7 @@ class SymbolScanner:
             with open(SymbolScanner.PICKLE_FILE, 'rb') as handle:
                 self.data = pickle.load(handle)
         else:
-            manager = multiprocessing.Manager()
-            return_dict = manager.dict()
-            jobs = []
-            for key, index_source in Indices.symbol_source_dict.items():
-                p = multiprocessing.Process(
-                    target=self.worker, args=(key, index_source, return_dict)
-                )
-                jobs.append(p)
-                p.start()
-
-            for proc in jobs:
-                proc.join()
+            return_dict = self.start_index()
             self.data = dict(return_dict)
             with open(SymbolScanner.PICKLE_FILE, 'wb') as handle:
                 pickle.dump(
@@ -51,14 +40,14 @@ class SymbolScanner:
 
     def start_metadata(self, indices):
         result = {}
-        with multiprocessing.Pool(processes=MAX_PROCESSES) as pool:
+        with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
             for index in indices:
                 _, stocks_with_metadata = zip(*pool.map(self.worker_metadata, indices[index]))
                 result[index] = stocks_with_metadata
         return result
 
     def worker_metadata(self, stock):
-        founded, employees, loc, industry, symbols = get_infobox_items()
+        founded, employees, loc, industry, symbols, isins = get_infobox_items()
         return {
                 'name': '',
                 'short_name': stock['short_name'],
@@ -67,18 +56,26 @@ class SymbolScanner:
                 'indices': stock['indices'],
                 'industries': industry,
                 'symbols': symbols,
+                'isins': isins,
                 'metadata': {
                     'founded': founded,
                     'employees': employees
                 }
             }
-        
-    def start_index(self, stocks):
-        pass
 
-    def worker_index(self, key, index_source, result):
+    def start_index(self):
+        with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
+            items =  list(map(lambda x: (x[0], x[1]), Indices.symbol_source_dict.items()))
+            index_results = pool.map(self.worker_index, items)
+        return index_results
+
+
+    def worker_index(self, args):
+        key, index_source = args
         self.log.info(f'________________ parse {index_source.TITLE}')
         wiki_url = f'https://{index_source.LANG}.wikipedia.org/wiki/{index_source.TITLE}#{index_source.SECTION}'
+        dfs = pd.read_html(wiki_url)
+        df = dfs[index_source.TABLE_ID]
         if index_source.COL_NAME_SYMBOL is not None:
             df = df.rename(
                 columns={
@@ -90,7 +87,7 @@ class SymbolScanner:
             df = df.rename(columns={index_source.COL_NAME_COMPANY: 'name'})
             df['symbol'] = None
             df = df[['name', 'symbol']]
-        result[key] = []
+        result = {key: []}
         for wiki_name, symbol in df[['name', 'symbol']]:
             stock = {
                 'name': '',
@@ -102,6 +99,8 @@ class SymbolScanner:
                 'metadata': {}
             }
             result[key].append(stock)
+        return result
+
 
 
     def worker(self, key, index_source, result):

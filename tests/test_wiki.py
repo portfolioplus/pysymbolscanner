@@ -18,11 +18,12 @@ class TestWiki(unittest.TestCase):
         :return:
         """
         items_google = get_infobox_items('Alphabet')
-        self.assertEqual(len(items_google), 6)
-        items_bmw = get_infobox_items('BMW')
-        self.assertEqual(len(items_bmw), 6)
+        self.assertEqual(len(items_google), 7)
         items_basf = get_infobox_items('BASF')
-        self.assertEqual(len(items_basf), 6)
+        self.assertEqual(len(items_basf), 7)
+        items_bmw = get_infobox_items('BMW')
+        self.assertEqual(len(items_bmw), 7)
+
 
     def test_get_country(self):
         """

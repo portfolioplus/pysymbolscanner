@@ -6,37 +6,49 @@ import pycountry
 import gettext
 
 
+def _get_infobox_of_page(page, lang):
+    infobox = wptools.page(page, lang=lang).get_parse().data['infobox']
+    if infobox:
+        infobox = {k.lower(): v for k, v in infobox.items()}
+    return infobox
+
+
+def _is_infobox(infobox):
+    if infobox is None:
+        return False
+    infobox_items = [
+        'name',
+        'foundation',
+        'hq_location_country',
+        'location',
+        'industry',
+        'num_employees',
+        'traded_as',
+    ]
+    ctx = sum(map(lambda x: 1 if x in infobox else 0, infobox_items))
+    if ctx > 1:
+        return True
+    return False
+
+
 def get_infobox(page_search):
     lang_codes = ['en', 'de', 'es', 'fr']
     for lang in lang_codes:
+        infobox = _get_infobox_of_page(page_search, lang)
+        if _is_infobox(infobox):
+            return lang, infobox
         wp.set_lang(lang)
         search = wp.search(page_search)
         scores = get_scores(page_search, search)
         scored_search = zip(scores, search)
-        sorted_scored_search = sorted(scored_search, key=lambda tup: tup[0])
+        sorted_scored_search = list(
+            sorted(scored_search, key=lambda tup: tup[0])
+        )
+        sorted_scored_search.reverse()
         for item in sorted_scored_search:
-
-        try:
-            infobox = (
-                wptools.page(page_search, lang=lang)
-                .get_parse()
-                .data['infobox']
-            )
-            if infobox is None:
-                raise EnvironmentError
-            return (lang, infobox)
-        except:
-            try:
-
-                if search:
-                    idx, score = get_best_match(page_search, search)
-                    if score > 0.75:
-                        return (
-                            lang,
-                            wptools.page(search[idx], lang=lang).get_parse(),
-                        )
-            except:
-                pass
+            infobox = _get_infobox_of_page(item[1], lang)
+            if _is_infobox(infobox):
+                return lang, infobox
     return None
 
 
@@ -67,24 +79,33 @@ def get_infobox_items(page_search):
         employees = int(employees_items[0])
     if founded:
         founded = int(min(founded))
-    industry = re.findall(
-        r'\[[a-zA-Z_ ]+\|([a-zA-Z_ ]+)\]', infobox.get('industry', '')
-    )
-    if not industry:
+    industry = []
+    if lang == 'en':
         industry = re.findall(
-            r'\[\[([a-zA-Z_ ]+)\]\]', infobox.get('industry', '')
+            r'\[[a-zA-Z_ ()]+\|([a-zA-Z_ ]+)\]', infobox.get('industry', '')
         )
+        if not industry:
+            industry = re.findall(
+                r'\[\[([a-zA-Z_ ]+)\]\]', infobox.get('industry', '')
+            )
     symbols = re.findall(r'{{([a-zA-Z_: ]+)}}', infobox.get('traded_as', ''))
     if not symbols:
         symbols = re.findall(
             r'{{([a-zA-Z_| ]+)}}', infobox.get('traded_as', '')
         )
-    return name, founded, employees, loc, industry, symbols
+    isins = []
+    if 'isin' in infobox:
+        isins.append(infobox['isin'])
+    if 'isin2' in infobox:
+        isins.append(infobox['isin2'])
+    return name, founded, employees, loc, industry, symbols, isins
 
 
 def get_country(loc, mystr):
     if not mystr:
         return None
+
+    mystr = re.sub('[^0-9a-zA-Z _\-]+', '', mystr)
 
     if loc != 'en':
         # load language of wiki page
