@@ -24,6 +24,9 @@ def _is_infobox(infobox):
         'industry',
         'num_employees',
         'traded_as',
+        'isin',
+        'gründungsdatum',
+        'mitarbeiterzahl',
     ]
     ctx = sum(map(lambda x: 1 if x in infobox else 0, infobox_items))
     if ctx > 1:
@@ -31,8 +34,7 @@ def _is_infobox(infobox):
     return False
 
 
-def get_infobox(page_search):
-    lang_codes = ['en', 'de', 'es', 'fr']
+def get_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):
     for lang in lang_codes:
         infobox = _get_infobox_of_page(page_search, lang)
         if _is_infobox(infobox):
@@ -52,33 +54,56 @@ def get_infobox(page_search):
     return None
 
 
-def get_infobox_items(page_search):
-    infobox = get_infobox(page_search)
+def _get_value(infobox, keys):
+    return next(
+        filter(
+            lambda x: x is not None,
+            map(lambda key: infobox.get(key, None), keys),
+        ),
+        '',
+    )
+
+def _get_location(
+    infobox,
+    lang,
+    keys=['location_country', 'hq_location_country', 'location', 'sitz'],
+):
+    loc = _get_value(infobox, keys)
+    loc_translated = get_country(lang, loc if loc else str(infobox))
+    if loc_translated:
+        loc = loc_translated[0]
+    return loc
+
+def _get_foundation_date(
+    infobox,
+    keys=['foundation', 'founded', 'gründungsdatum'],
+):
+    founded = _get_value(infobox, keys)
+    if founded:
+        founded = re.findall(r'\d{4}', founded)
+        if founded:
+            return int(min(founded))
+    return ''
+
+def _get_employees(infobox, keys=['num_employees', 'mitarbeiterzahl']):
+    employees = _get_value(infobox, keys)
+    employees = employees.replace(',', '').replace('.', '')
+    employees_items = re.findall(r'\d+', employees)
+    if employees_items:
+        employees = int(employees_items[0])
+    return employees
+
+
+def get_infobox_items(page_search, lang_codes=['en', 'de', 'es', 'fr']):
+    infobox = get_infobox(page_search, lang_codes)
     if infobox is None or infobox[1] is None:
         return None
     lang, infobox = infobox
     name = infobox.get('name', '')
-    founded = infobox.get('foundation', '')
-    founded = re.findall(r'\d{4}', founded)
-    if not founded:
-        founded = infobox.get('founded', '')
-        founded = re.findall(r'\d{4}', founded)
-    employees_str = (
-        infobox.get('num_employees', '').replace(',', '').replace('.', '')
-    )
-    employees_items = re.findall(r'\d+', employees_str)
-    loc = infobox.get('location_country', '')
-    if not loc:
-        loc = infobox.get('hq_location_country', '')
-    if not loc:
-        loc = infobox.get('location', '')
-    loc_translated = get_country(lang, loc if loc else str(infobox))
-    if loc_translated:
-        loc = loc_translated[0]
-    if employees_items:
-        employees = int(employees_items[0])
-    if founded:
-        founded = int(min(founded))
+    loc = _get_location(infobox, lang)
+    founded = _get_foundation_date(infobox)
+    employees = _get_employees(infobox)
+
     industry = []
     if lang == 'en':
         industry = re.findall(
@@ -101,6 +126,26 @@ def get_infobox_items(page_search):
     return name, founded, employees, loc, industry, symbols, isins
 
 
+def get_merged_infoboxes(page_search, lang_codes=['en', 'de', 'es', 'fr']):
+    keys = [
+        'name',
+        'founded',
+        'employees',
+        'loc',
+        'industry',
+        'symbols',
+        'isins',
+    ]
+    infobox = dict.fromkeys(keys, [])
+    for infobox_items in map(
+        lambda lang: get_infobox_items(page_search, [lang]), lang_codes
+    ):
+        if infobox_items is None:
+            continue
+        infobox.update(dict(zip(keys, infobox_items)))
+    return infobox
+
+
 def get_country(loc, mystr):
     if not mystr:
         return None
@@ -116,22 +161,45 @@ def get_country(loc, mystr):
         _ = lang.gettext
         translate = dict(
             map(
-                lambda x: (_(x.name), (x.name, x.alpha_2)), pycountry.countries
+                lambda x: (_(x.name), (x.name, x.alpha_2, x.alpha_3)), pycountry.countries
             )
         )
     else:
         translate = dict(
-            map(lambda x: (x.name, (x.name, x.alpha_2)), pycountry.countries)
+            map(lambda x: (x.name, (x.name, x.alpha_2, x.alpha_3)), pycountry.countries)
         )
 
     country = next(
         filter(
             lambda key: key.lower() in mystr.lower()
-            or translate[key][1].lower() == mystr.replace('.', '').lower(),
+            or translate[key][1].lower() == mystr.replace('.', '').lower()
+            or translate[key][2].lower() == mystr.replace('.', '').lower(),
             translate,
         ),
         None,
     )
+    if not country:
+        extract = list(filter(lambda x: len(x) == 2, mystr.lower().replace('.', '').split(' ')))
+        if extract:
+            extract = extract[-1]
+            country = next(
+                filter(
+                    lambda key: translate[key][1].lower() == extract,
+                    translate,
+                ),
+                None,
+            )
+    if not country:
+        extract = list(filter(lambda x: len(x) == 3, mystr.lower().replace('.', '').split(' ')))
+        if extract:
+            extract = extract[-1]
+            country = next(
+                filter(
+                    lambda key: translate[key][2].lower() == extract,
+                    translate,
+                ),
+                None,
+            )
     if country:
         country = translate[country]
     return country

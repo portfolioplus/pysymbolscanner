@@ -8,10 +8,14 @@
 import unittest
 
 from pytickersymbols import PyTickerSymbols
-from pysymbolscanner.wiki import get_infobox_items, get_country
+from pysymbolscanner.wiki import (
+    get_infobox_items,
+    get_country,
+    get_merged_infoboxes,
+)
+
 
 class TestWiki(unittest.TestCase):
-
     def test_infobox(self):
         """
         Test wiki infobox
@@ -24,6 +28,13 @@ class TestWiki(unittest.TestCase):
         items_bmw = get_infobox_items('BMW')
         self.assertEqual(len(items_bmw), 7)
 
+    def test_merged_infoboxes(self):
+        """
+        Test wiki infobox
+        :return:
+        """
+        items_bmw = get_merged_infoboxes('BMW', ['de', 'en'])
+        self.assertEqual(len(items_bmw), 7)
 
     def test_get_country(self):
         """
@@ -46,7 +57,6 @@ class TestWiki(unittest.TestCase):
         country, code = country
         self.assertEqual(country, 'Germany')
         self.assertEqual(code, 'DE')
-
 
 
 if __name__ == "__main__":
