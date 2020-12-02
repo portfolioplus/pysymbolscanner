@@ -31,7 +31,7 @@ if __name__ == "__main__":
         stocks = stock_data.get_stocks_by_index(index)
         py_stocks = list(map(lambda x: x['name'], stocks))
         wiki_stocks = [
-            wiki_stock for wiki_stock in scanner.data[index]['name']
+            wiki_stock.data['short_name'] for wiki_stock in scanner.data[index]
         ]
         missing_stocks = get_word_list_diff(wiki_stocks, py_stocks)
         scanner.log.info(f'-------missing stocks of {index}---------')

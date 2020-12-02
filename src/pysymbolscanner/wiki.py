@@ -60,11 +60,15 @@ def get_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):
 
 
 def get_merged_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):
-    infoboxes = []
+    result = None
     for infobox in map(
         lambda lang: get_infobox(page_search, [lang]), lang_codes
     ):
         if infobox is None:
             continue
-        infoboxes.append(infobox)
-    return infoboxes
+
+        if result:
+            result.update(infobox)
+        else:
+            result = infobox
+    return result

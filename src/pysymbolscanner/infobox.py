@@ -5,6 +5,7 @@ from pysymbolscanner.stock import Stock
 
 
 class Infobox:
+
     def __init__(
         self, name, founded, employees, loc, industry, symbols, isins
     ):
@@ -38,6 +39,28 @@ class Infobox:
             self.employees,
             self.founded,
         )
+
+    def update(self, infobox):
+        if not self.name:
+            self.name = infobox.name
+        elif infobox.name and self.name != infobox.name:
+            self.name = min([self.name, infobox.name])
+        if not self.founded:
+            self.founded = infobox.founded
+        if not self.employees:
+            self.employees = infobox.employees
+        if not self.location:
+            self.location = infobox.location
+        if not self.industry:
+            self.industry = infobox.industry
+        if not self.symbols:
+            self.symbols = infobox.symbols
+        elif infobox.symbols:
+            self.symbols = list(set(self.symbols + infobox.symbols))
+        if not self.isins:
+            self.isins = infobox.isins
+        elif infobox.isins:
+            self.isins = list(set(self.symbols + infobox.isins))
 
 
 def get_value(infobox, keys):

@@ -8,7 +8,7 @@
 import unittest
 from pysymbolscanner.wiki import (
     get_infobox,
-    get_merged_infoboxes,
+    get_merged_infobox,
 )
 from pysymbolscanner.infobox import get_country
 
@@ -31,7 +31,7 @@ class TestWiki(unittest.TestCase):
         Test wiki infobox
         :return:
         """
-        items_bmw = get_merged_infoboxes('BMW', ['de', 'en'])
+        items_bmw = get_merged_infobox('BMW', ['de', 'en'])
         self.assertEqual(len(items_bmw), 7)
 
     def test_get_country(self):
