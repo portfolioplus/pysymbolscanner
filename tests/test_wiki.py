@@ -6,13 +6,11 @@
   can be found in the LICENSE file.
 """
 import unittest
-
-from pytickersymbols import PyTickerSymbols
 from pysymbolscanner.wiki import (
-    get_infobox_items,
-    get_country,
+    get_infobox,
     get_merged_infoboxes,
 )
+from pysymbolscanner.infobox import get_country
 
 
 class TestWiki(unittest.TestCase):
@@ -21,11 +19,11 @@ class TestWiki(unittest.TestCase):
         Test wiki infobox
         :return:
         """
-        items_google = get_infobox_items('Alphabet')
+        items_google = get_infobox('Alphabet')
         self.assertEqual(len(items_google), 7)
-        items_basf = get_infobox_items('BASF')
+        items_basf = get_infobox('BASF')
         self.assertEqual(len(items_basf), 7)
-        items_bmw = get_infobox_items('BMW')
+        items_bmw = get_infobox('BMW')
         self.assertEqual(len(items_bmw), 7)
 
     def test_merged_infoboxes(self):

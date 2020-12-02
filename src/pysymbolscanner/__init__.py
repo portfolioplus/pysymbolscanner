@@ -6,25 +6,16 @@
   can be found in the LICENSE file.
 """
 import logging
-import os
-import pickle
-import sys
 
 import argparse
-import pandas as pd
-import wikipedia as wp
-import wptools
-from pytickersymbols import PyTickerSymbols, Statics
-from difflib import SequenceMatcher
-import multiprocessing
-from pysymbolscanner.index_definitions import Indices
+from pytickersymbols import PyTickerSymbols
 from pysymbolscanner.scanner import SymbolScanner
 from pysymbolscanner.word_score import get_word_list_diff
 
 logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
 
-__VERSION__ =  "1.0.0"
+__VERSION__ = "1.0.0"
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(

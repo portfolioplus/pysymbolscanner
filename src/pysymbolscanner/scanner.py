@@ -11,12 +11,10 @@ import os
 import pickle
 import sys
 import pandas as pd
-import wikipedia as wp
-import wptools
-from difflib import SequenceMatcher
 import multiprocessing
 from pysymbolscanner.index_definitions import Indices
-from pysymbolscanner.wiki import get_infobox, get_infobox_items
+from pysymbolscanner.wiki import get_merged_infobox
+from pysymbolscanner.stock import Stock
 
 
 class SymbolScanner:
@@ -42,38 +40,30 @@ class SymbolScanner:
         result = {}
         with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
             for index in indices:
-                _, stocks_with_metadata = zip(*pool.map(self.worker_metadata, indices[index]))
+                _, stocks_with_metadata = zip(
+                    *pool.map(self.worker_metadata, indices[index])
+                )
                 result[index] = stocks_with_metadata
         return result
 
     def worker_metadata(self, stock):
-        founded, employees, loc, industry, symbols, isins = get_infobox_items()
-        return {
-                'name': '',
-                'short_name': stock['short_name'],
-                'symbol': symbols,
-                'country': loc,
-                'indices': stock['indices'],
-                'industries': industry,
-                'symbols': symbols,
-                'isins': isins,
-                'metadata': {
-                    'founded': founded,
-                    'employees': employees
-                }
-            }
+        infobox = get_merged_infobox(stock['short_name'])
+        return infobox.to_stock(stock['indices'])
 
     def start_index(self):
         with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
-            items =  list(map(lambda x: (x[0], x[1]), Indices.symbol_source_dict.items()))
-            index_results = pool.map(self.worker_index, items)
+            items = list(
+                map(lambda x: (x[0], x[1]), Indices.symbol_source_dict.items())
+            )
+            index_results = pool.map(self.worker_index, items, chunksize=1)
+        result = map(lambda x: x[0], index_results)
         return index_results
-
 
     def worker_index(self, args):
         key, index_source = args
         self.log.info(f'________________ parse {index_source.TITLE}')
-        wiki_url = f'https://{index_source.LANG}.wikipedia.org/wiki/{index_source.TITLE}#{index_source.SECTION}'
+        wiki_url = f'https://{index_source.LANG}.wikipedia.org/wiki/' \
+                   f'{index_source.TITLE}#{index_source.SECTION}'
         dfs = pd.read_html(wiki_url)
         df = dfs[index_source.TABLE_ID]
         if index_source.COL_NAME_SYMBOL is not None:
@@ -88,20 +78,10 @@ class SymbolScanner:
             df['symbol'] = None
             df = df[['name', 'symbol']]
         result = {key: []}
-        for wiki_name, symbol in df[['name', 'symbol']]:
-            stock = {
-                'name': '',
-                'short_name': wiki_name,
-                'symbol': symbol,
-                'indices': [key],
-                'industries': [],
-                'symbols': [],
-                'metadata': {}
-            }
+        for wiki_name, symbol in zip(df.name, df.symbol):
+            stock = Stock.from_wiki(key, wiki_name, symbol)
             result[key].append(stock)
         return result
-
-
 
     def worker(self, key, index_source, result):
         self.log.info(f'________________ parse {index_source.TITLE}')
