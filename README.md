@@ -5,7 +5,10 @@
 
 
 # pysymbolscanner
-Stock symbol scanner for pytickersymbols repo 
+
+Stock symbol scanner for [pytickersymbols](https://github.com/portfolioplus/pytickersymbols).
+The tool scans several wikipedia pages to create an update via PR.
+
 # install pycurl on macos
 
 When you got the error message `src/pycurl.h: fatal error: 'openssl/ssl.h' file not found` you can try:

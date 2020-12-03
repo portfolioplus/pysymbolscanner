@@ -15,9 +15,13 @@ def get_best_match(word, items):
 
 def get_scores(word, items):
     return map(
-        lambda item: SequenceMatcher(None, word.lower(), item.lower()).ratio(),
+        lambda item: get_score(word, item),
         items,
     )
+
+
+def get_score(word_a, word_b):
+    return SequenceMatcher(None, word_a.lower(), word_b.lower()).ratio()
 
 
 def get_word_list_diff(words_a, words_b):

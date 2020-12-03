@@ -4,17 +4,38 @@ from pysymbolscanner.word_score import get_scores
 from pysymbolscanner.infobox import Infobox
 
 
-def _get_infobox_of_page(page, lang):
-    infobox = wptools.page(page, lang=lang).get_parse().data['infobox']
-    if infobox:
-        infobox = {k.lower(): v for k, v in infobox.items()}
-    return infobox
+def _get_infobox_of_page(name, lang):
+    try:
+        if lang == 'es':
+            opt = {
+                'boxterm': 'Ficha',
+                'skip': ['imageinfo'],
+                'silent': True,
+                'lang': lang
+            }
+        else:
+            opt = {
+                'skip': ['imageinfo'],
+                'silent': True,
+                'lang': lang
+            }
+        page = wptools.page(name, **opt).get_parse()
+        infobox = page.data['infobox']
+        if infobox:
+            infobox = {k.lower(): v for k, v in infobox.items()}
+        return infobox
+    except LookupError:
+        return None
 
 
 def _is_infobox(infobox):
     if infobox is None:
         return False
     infobox_items = [
+        'nam',
+        'effectif',
+        'date de création',
+        'siège (pays)',
         'name',
         'foundation',
         'hq_location_country',
@@ -25,6 +46,9 @@ def _is_infobox(infobox):
         'isin',
         'gründungsdatum',
         'mitarbeiterzahl',
+        'nombre',
+        'empleados',
+        'sede'
     ]
     ctx = sum(map(lambda x: 1 if x in infobox else 0, infobox_items))
     if ctx > 1:

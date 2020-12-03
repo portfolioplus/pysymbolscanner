@@ -41,13 +41,24 @@ class SymbolScanner:
         with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
             for index in self.data:
                 stocks_with_metadata = pool.map(
-                    self.worker_metadata, self.data[index]
+                    self.worker_metadata,
+                    (
+                        self.data[index],
+                        Indices.symbol_source_dict[index].PAGE_LANGS,
+                    ),
                 )
                 result[index] = stocks_with_metadata
         return result
 
-    def worker_metadata(self, stock):
-        infobox = get_merged_infobox(stock.data['short_name'])
+    def worker_metadata(self, args):
+        stock, langs = args
+        infobox = get_merged_infobox(stock.data['short_name'], langs)
+        if not infobox:
+            self.log.warn(
+                'Did not find any wikipedia data'
+                f'for {stock.data["short_name"]}'
+            )
+            return stock
         return infobox.to_stock(stock.data['indices'])
 
     def start_index(self):

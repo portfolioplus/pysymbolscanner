@@ -17,11 +17,11 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 
 __VERSION__ = "1.0.0"
 
-if __name__ == "__main__":
+if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='SymbolScanner CLI'
     )
-    parser.add_argument('--cache', action="store_true", default=False)
+    parser.add_argument('--cache', action='store_true', default=False)
     args = parser.parse_args()
     scanner = SymbolScanner(args.cache)
     stock_data = PyTickerSymbols()

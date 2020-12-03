@@ -37,7 +37,8 @@ setup(
     author_email="slash.gordon.dev@gmail.com",
     py_modules=['pysymbolscanner'],
     package_dir={'': 'src'},
-    description="The lib scanns wiki pages and updates symbol source of pytickersymbols",
+    description='The lib scans wiki pages and'
+    ' updates symbol source of pytickersymbols',
     long_description=long_description,
     long_description_content_type="text/markdown",
     license='MIT',

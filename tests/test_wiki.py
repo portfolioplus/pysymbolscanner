@@ -31,6 +31,8 @@ class TestWiki(unittest.TestCase):
         Test wiki infobox
         :return:
         """
+        items_bmw = get_merged_infobox('CaixaBank', ['es'])
+        self.assertEqual(len(items_bmw), 7)
         items_bmw = get_merged_infobox('BMW', ['de', 'en'])
         self.assertEqual(len(items_bmw), 7)
 

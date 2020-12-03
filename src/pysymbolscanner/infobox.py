@@ -2,10 +2,10 @@ import re
 import pycountry
 import gettext
 from pysymbolscanner.stock import Stock
+from pysymbolscanner.word_score import get_score
 
 
 class Infobox:
-
     def __init__(
         self, name, founded, employees, loc, industry, symbols, isins
     ):
@@ -44,7 +44,10 @@ class Infobox:
         if not self.name:
             self.name = infobox.name
         elif infobox.name and self.name != infobox.name:
-            self.name = min([self.name, infobox.name])
+            # check similarity
+            score = get_score(self.name, infobox.name)
+            if score >= 0.75:
+                self.name = min([self.name, infobox.name])
         if not self.founded:
             self.founded = infobox.founded
         if not self.employees:
@@ -76,7 +79,14 @@ def get_value(infobox, keys):
 def get_location(
     infobox,
     lang,
-    keys=['location_country', 'hq_location_country', 'location', 'sitz'],
+    keys=[
+        'location_country',
+        'hq_location_country',
+        'location',
+        'sitz',
+        'siège (pays)',
+        'sede',
+    ],
 ):
     loc = get_value(infobox, keys)
     loc_translated = get_country(lang, loc if loc else str(infobox))
@@ -87,7 +97,14 @@ def get_location(
 
 def get_foundation_date(
     infobox,
-    keys=['foundation', 'founded', 'gründungsdatum'],
+    keys=[
+        'foundation',
+        'founded',
+        'gründungsdatum',
+        'date de création',
+        'dates-clés',
+        'fundación'
+    ],
 ):
     founded = get_value(infobox, keys)
     if founded:
@@ -97,7 +114,9 @@ def get_foundation_date(
     return ''
 
 
-def get_employees(infobox, keys=['num_employees', 'mitarbeiterzahl']):
+def get_employees(
+    infobox, keys=['num_employees', 'mitarbeiterzahl', 'effectif', 'empleados']
+):
     employees = get_value(infobox, keys)
     employees = employees.replace(',', '').replace('.', '')
     employees_items = re.findall(r'\d+', employees)
@@ -106,10 +125,22 @@ def get_employees(infobox, keys=['num_employees', 'mitarbeiterzahl']):
     return employees
 
 
+def get_name(infobox, keys=['name', 'nam', 'nombre']):
+    return get_value(infobox, keys)
+
+
+def get_symbols(infobox, keys=['traded_as', 'action', 'símbolo_bursátil']):
+    val = get_value(infobox, keys)
+    symbols = re.findall(r'{{([a-zA-Z_: ]+)}}', val)
+    if not symbols:
+        symbols = re.findall(r'{{([a-zA-Z_| ]+)}}', val)
+    return symbols
+
+
 def get_country(loc, mystr):
     if not mystr:
         return None
-
+    # todo: fix accent characters
     mystr = re.sub('[^0-9a-zA-Z _\-]+', '', mystr)
 
     if loc != 'en':
@@ -172,7 +203,7 @@ def get_country(loc, mystr):
 def parse_infobox(infobox, lang):
     if infobox is None:
         return None
-    name = infobox.get('name', '')
+    name = get_name(infobox)
     loc = get_location(infobox, lang)
     founded = get_foundation_date(infobox)
     employees = get_employees(infobox)
@@ -186,11 +217,7 @@ def parse_infobox(infobox, lang):
             industry = re.findall(
                 r'\[\[([a-zA-Z_ ]+)\]\]', infobox.get('industry', '')
             )
-    symbols = re.findall(r'{{([a-zA-Z_: ]+)}}', infobox.get('traded_as', ''))
-    if not symbols:
-        symbols = re.findall(
-            r'{{([a-zA-Z_| ]+)}}', infobox.get('traded_as', '')
-        )
+    symbols = get_symbols(infobox)
     isins = []
     if 'isin' in infobox:
         isins.append(infobox['isin'])
