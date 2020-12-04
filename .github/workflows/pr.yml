@@ -13,6 +13,9 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
+      - name: Install dependencies
+        run: |
+          sudo apt-get install libcurl4-openssl-dev
       - uses: actions/setup-python@v1
         with:
           python-version: ${{ matrix.python }}
