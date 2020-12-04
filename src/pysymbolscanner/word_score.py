@@ -37,8 +37,11 @@ def get_word_list_diff(words_a, words_b):
         if max_score > 0.75:
             result.append(ida)
         else:
+            word_splited = stock_a.split()
+            if not word_splited:
+                continue
             _, max_score_short = get_best_match(
-                stock_a.split()[0], stocks_b_short
+                word_splited[0], stocks_b_short
             )
             if max_score_short == 1.0:
                 result.append(ida)
