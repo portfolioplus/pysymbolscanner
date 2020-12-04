@@ -40,13 +40,14 @@ class SymbolScanner:
         result = {}
         with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
             for index in self.data:
-                stocks_with_metadata = pool.map(
-                    self.worker_metadata,
-                    (
-                        self.data[index],
-                        Indices.symbol_source_dict[index].PAGE_LANGS,
+                args = map(
+                    lambda stock, idx=index: (
+                        stock,
+                        Indices.symbol_source_dict[idx].PAGE_LANGS,
                     ),
+                    self.data[index],
                 )
+                stocks_with_metadata = pool.map(self.worker_metadata, args)
                 result[index] = stocks_with_metadata
         return result
 

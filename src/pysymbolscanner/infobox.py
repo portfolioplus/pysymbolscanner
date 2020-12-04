@@ -1,6 +1,7 @@
 import re
 import pycountry
 import gettext
+from unidecode import unidecode
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.word_score import get_score
 
@@ -103,7 +104,7 @@ def get_foundation_date(
         'gründungsdatum',
         'date de création',
         'dates-clés',
-        'fundación'
+        'fundación',
     ],
 ):
     founded = get_value(infobox, keys)
@@ -126,7 +127,14 @@ def get_employees(
 
 
 def get_name(infobox, keys=['name', 'nam', 'nombre']):
-    return get_value(infobox, keys)
+    name = get_value(infobox, keys)
+    if not ('{{color|' in name and '}}' in name):
+        return name
+
+    names = re.findall(r'{{color\|.+?\|(.+?)}}', name)
+    if names:
+        return names[0]
+    return name
 
 
 def get_symbols(infobox, keys=['traded_as', 'action', 'símbolo_bursátil']):
@@ -137,11 +145,41 @@ def get_symbols(infobox, keys=['traded_as', 'action', 'símbolo_bursátil']):
     return symbols
 
 
+def find_by_alpha_code(wiki_str, translate):
+    result = None
+    # find by alpha 2 or alpha 3 code
+    for word_length in [2, 3]:
+        if result:
+            break
+
+        extract = list(
+            filter(
+                lambda x, length=word_length: len(x) == length,
+                wiki_str.lower().replace('.', '').split(' '),
+            )
+        )
+
+        if not extract:
+            continue
+
+        word = extract[-1]
+        result = next(
+            filter(
+                lambda key, length=word_length, alpha=word: translate[key][
+                    length - 1
+                ].lower()
+                == alpha,
+                translate,
+            ),
+            None,
+        )
+    return result
+
+
 def get_country(loc, mystr):
     if not mystr:
         return None
-    # todo: fix accent characters
-    mystr = re.sub('[^0-9a-zA-Z _\-]+', '', mystr)
+    mystr = re.sub('[^0-9a-zA-Z _\-]+', '', unidecode(mystr))
 
     if loc != 'en':
         # load language of wiki page
@@ -164,37 +202,20 @@ def get_country(loc, mystr):
             )
         )
 
-    # find by name
+    # try to find the occurrence of country names in sentences
     country = next(
         filter(
-            lambda key: key.lower() in mystr.lower(),
+            lambda key: unidecode(key.lower()) in mystr.lower(),
             translate,
         ),
         None,
     )
 
-    # find by alpha 2 or alpha 3 code
-    for word_length in [2, 3]:
-        if country:
-            break
-        extract = list(
-            filter(
-                lambda x, length=word_length: len(x) == length,
-                mystr.lower().replace('.', '').split(' '),
-            )
-        )
-        if extract:
-            word = extract[-1]
-            country = next(
-                filter(
-                    lambda key, length=word_length, alpha=word: translate[key][
-                        length - 1
-                    ].lower()
-                    == alpha,
-                    translate,
-                ),
-                None,
-            )
+    # try to find by alpha code
+    if not country:
+        country = find_by_alpha_code(mystr, translate)
+
+    # translate back to english
     if country:
         country = translate[country]
     return country

@@ -6,10 +6,8 @@
   can be found in the LICENSE file.
 """
 import unittest
-
-from pytickersymbols import PyTickerSymbols
-from pysymbolscanner.index_definitions import Indices
 from pysymbolscanner.word_score import get_word_list_diff
+
 
 class TestWordScore(unittest.TestCase):
 

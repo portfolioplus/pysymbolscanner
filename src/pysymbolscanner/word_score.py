@@ -27,7 +27,7 @@ def get_score(word_a, word_b):
 def get_word_list_diff(words_a, words_b):
     words_a = sorted(words_a)
     words_b = sorted(words_b)
-    # todo: try to split word groups and ignore stuff like ag and son
+
     result = []
     stocks_b_short = list(
         map(lambda x: x.split()[0] if len(x.split()) > 0 else x, words_b)
