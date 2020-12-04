@@ -15,7 +15,7 @@ from pysymbolscanner.word_score import get_word_list_diff
 logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
 
-__VERSION__ = "1.0.0"
+__version__ = "1.0.0"
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(
