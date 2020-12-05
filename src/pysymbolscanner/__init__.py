@@ -18,13 +18,13 @@ logging.getLogger('urllib3').setLevel(logging.WARNING)
 __version__ = "1.0.0"
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(
-        description='SymbolScanner CLI'
-    )
+    parser = argparse.ArgumentParser(description='SymbolScanner CLI')
     parser.add_argument('--cache', action='store_true', default=False)
     args = parser.parse_args()
-    scanner = SymbolScanner(args.cache)
     stock_data = PyTickerSymbols()
+    scanner = SymbolScanner(args.cache)
+    scanner.start()
+    scanner.sync_pytickersymbols(stock_data)
     indices = stock_data.get_all_indices()
     # missing stocks in index
     for index in indices:
@@ -34,6 +34,10 @@ if __name__ == '__main__':
             wiki_stock.data['short_name'] for wiki_stock in scanner.data[index]
         ]
         missing_stocks = get_word_list_diff(wiki_stocks, py_stocks)
+        missing_stocks_obj = list(filter(
+            lambda x, stocks=missing_stocks: x.data['short_name'] in stocks,
+            scanner.data[index],
+        ))
         scanner.log.info(f'-------missing stocks of {index}---------')
         for stock in missing_stocks:
             scanner.log.info(stock)

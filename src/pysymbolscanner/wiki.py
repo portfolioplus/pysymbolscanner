@@ -80,7 +80,10 @@ def get_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):
     infobox = get_wiki_infobox(page_search, lang_codes)
     if infobox is None or infobox[1] is None:
         return None
-    return Infobox.from_wiki_infobox(*infobox)
+    parsed_infobox = Infobox.from_wiki_infobox(*infobox)
+    if not parsed_infobox.name:
+        parsed_infobox.name = page_search
+    return parsed_infobox
 
 
 def get_merged_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):

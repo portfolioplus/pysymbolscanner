@@ -30,7 +30,7 @@ def get_word_list_diff(words_a, words_b):
 
     result = []
     stocks_b_short = list(
-        map(lambda x: x.split()[0] if len(x.split()) > 0 else x, words_b)
+        map(lambda x: max(x.split()) if len(x.split()) > 0 else x, words_b)
     )
     for ida, stock_a in enumerate(words_a):
         _, max_score = get_best_match(stock_a, words_b)
@@ -41,7 +41,7 @@ def get_word_list_diff(words_a, words_b):
             if not word_splited:
                 continue
             _, max_score_short = get_best_match(
-                word_splited[0], stocks_b_short
+                max(word_splited), stocks_b_short
             )
             if max_score_short == 1.0:
                 result.append(ida)

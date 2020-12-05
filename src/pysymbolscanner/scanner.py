@@ -15,6 +15,7 @@ import multiprocessing
 from pysymbolscanner.index_definitions import Indices
 from pysymbolscanner.wiki import get_merged_infobox
 from pysymbolscanner.stock import Stock
+from pysymbolscanner.word_score import get_best_match
 
 
 class SymbolScanner:
@@ -25,7 +26,10 @@ class SymbolScanner:
         logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
         self.log = logging.getLogger('symbol scanner')
         self.data = None
-        if cache and os.path.isfile(SymbolScanner.PICKLE_FILE):
+        self.cache = cache
+
+    def start(self):
+        if self.cache and os.path.isfile(SymbolScanner.PICKLE_FILE):
             with open(SymbolScanner.PICKLE_FILE, 'rb') as handle:
                 self.data = pickle.load(handle)
         else:
@@ -35,6 +39,27 @@ class SymbolScanner:
                 pickle.dump(
                     self.data, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
+
+    def sync_pytickersymbols(self, stocks):
+
+        pyticker_names = [
+            stock['name']
+            for stock_list in map(
+                lambda index: stocks.get_stocks_by_index(index),
+                stocks.get_all_indices(),
+            )
+            for stock in stock_list
+        ]
+        if not self.data:
+            return
+        for index in self.data:
+            for idx, stock in enumerate(self.data[index]):
+                pyticker_id, _ = get_best_match(
+                    stock.data['short_name'], pyticker_names
+                )
+                self.data[index][idx].data['name'] = pyticker_names[
+                    pyticker_id
+                ]
 
     def start_metadata(self):
         result = {}

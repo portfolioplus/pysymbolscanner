@@ -25,5 +25,5 @@ class Stock:
         }
 
     @classmethod
-    def from_wiki(cls, index, wiki_name, symbol):
-        return cls('', wiki_name, symbol, '', index, [], [], [], 0, 0)
+    def from_wiki(cls, index, short_name, symbol):
+        return cls('', short_name, symbol, '', index, [], [], [], 0, 0)
