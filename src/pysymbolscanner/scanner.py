@@ -16,9 +16,11 @@ from pysymbolscanner.index_definitions import Indices
 from pysymbolscanner.wiki import get_merged_infobox
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.word_score import get_best_match
+from pytickersymbols import PyTickerSymbols
 
 
 class SymbolScanner:
+    MIN_WORD_OCCURRENCE = 5
     MAX_PROCESSES = 8
     PICKLE_FILE = 'index_data.pickle'
 
@@ -39,10 +41,14 @@ class SymbolScanner:
                 pickle.dump(
                     self.data, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
+        self.data = self.start_sync()
 
-    def sync_pytickersymbols(self, stocks):
+    def start_sync(self):
+        stocks = PyTickerSymbols()
+        if not self.data:
+            return
 
-        pyticker_names = [
+        names = [
             stock['name']
             for stock_list in map(
                 lambda index: stocks.get_stocks_by_index(index),
@@ -50,16 +56,59 @@ class SymbolScanner:
             )
             for stock in stock_list
         ]
-        if not self.data:
-            return
-        for index in self.data:
-            for idx, stock in enumerate(self.data[index]):
-                pyticker_id, _ = get_best_match(
-                    stock.data['short_name'], pyticker_names
+
+        endings = list(
+            map(lambda x: ' ' + x, self.get_most_common_endings(names))
+        )
+
+        with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
+            items = list(
+                map(
+                    lambda x: (x[0], endings, names),
+                    Indices.symbol_source_dict.items(),
                 )
-                self.data[index][idx].data['name'] = pyticker_names[
-                    pyticker_id
-                ]
+            )
+            sync_results = pool.map(self.worker_sync, items)
+            result = dict(map(lambda val: list(val.items())[0], sync_results))
+            return result
+
+    def worker_sync(self, args):
+        index, endings, names = args
+        wiki_stocks = self.data[index].copy()
+        for idx, wiki_stock in enumerate(wiki_stocks):
+            wiki_stock_name = wiki_stock.data['short_name']
+            name_id, max_score = get_best_match(
+                wiki_stock_name,
+                names,
+                word_filter=endings,
+            )
+            if max_score > 0.75:
+                wiki_stocks[idx].data['name'] = names[name_id]
+            else:
+                self.log.warn(f'Did not find any match for {wiki_stock_name}')
+        return {index: wiki_stocks}
+
+    def get_most_common_endings(self, names):
+        most_words = {}
+        for name in names:
+            if not name.split():
+                continue
+            word = name.split()[-1]
+            most_words[word] = most_words.get(word, 0) + 1
+
+        for index in self.data:
+            for stock in self.data[index]:
+                name = stock.data['short_name']
+                if not name.split():
+                    continue
+                word = name.split()[-1]
+                most_words[word] = most_words.get(word, 0) + 1
+        items_list = [word for word in most_words.items()]
+        items_list.sort(key=lambda tup: tup[1])
+        return map(
+            lambda x: x[0],
+            filter(lambda f: f[1] >= self.MIN_WORD_OCCURRENCE, items_list),
+        )
 
     def start_metadata(self):
         result = {}

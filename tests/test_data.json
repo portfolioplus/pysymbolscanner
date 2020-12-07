@@ -176,6 +176,34 @@
          "homepage": "[http://www.basf.com www.basf.com]"
       }
    },
+   "Amadeus FiRe": {
+      "en": {
+         "name": "SDAX",
+         "logo": "[[Image:SDAX-logo.svg|200px]]",
+         "foundation": "21 June 1999",
+         "operator": "[[Deutsche B\u00f6rse]]",
+         "exchanges": "[[Frankfurt Stock Exchange]]",
+         "constituents": "70",
+         "cap_level": "Small-cap, non-technology sectors",
+         "weighting": "[[Capitalization-weighted index|Capitalization-weighted]]",
+         "related": "[[DAX]], [[MDAX]], [[TecDAX]]",
+         "homepage": "[http://deutsche-boerse.com/dbag/dispatch/en/kir/gdb_navigation/home?wp=DE0009653386 SDAX homepage]"
+      },
+      "de": {
+         "name": "Amadeus FiRe AG",
+         "logo": "Amadeus FiRe Logo Personaldienstleistung.svg",
+         "unternehmensform": "[[Aktiengesellschaft (Deutschland)|Aktiengesellschaft]]",
+         "isin": "DE0005093108",
+         "gr\u00fcndungsdatum": "2003",
+         "sitz": "[[Frankfurt am Main]],<br /> {{DEU}}",
+         "leitung": "* Robert von W\u00fclfing, [[Vorstandsvorsitzender]], Vorstand Finanzen\n* Dennis Gerlitzki, [[Chief Operating Officer]]\n* Christoph Gro\u00df [[Aufsichtsratsvorsitzender]]",
+         "mitarbeiterzahl": "2.907",
+         "umsatz": "233,12 Mio. [[Euro]] (2019)",
+         "stand": "2018-12-31",
+         "branche": "Personaldienstleistungen",
+         "homepage": "[http://www.amadeus-fire.de/ www.amadeus-fire.de]"
+      }
+   },
    "BMW": {
       "en": {
          "name": "Bayerische Motoren Werke AG",

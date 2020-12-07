@@ -24,7 +24,6 @@ if __name__ == '__main__':
     stock_data = PyTickerSymbols()
     scanner = SymbolScanner(args.cache)
     scanner.start()
-    scanner.sync_pytickersymbols(stock_data)
     indices = stock_data.get_all_indices()
     # missing stocks in index
     for index in indices:

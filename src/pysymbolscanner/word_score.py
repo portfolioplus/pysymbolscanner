@@ -1,16 +1,44 @@
 from difflib import SequenceMatcher
 
 
-def get_best_match(word, items):
+def _remove(word, word_filter):
+    for old in word_filter:
+        if word.endswith(old):
+            word = word.replace(old, '')
+    return word
+
+
+def get_best_match(word, items, word_filter=[]):
+    if word_filter:
+        word = _remove(word, word_filter)
+        items = list(map(lambda x: _remove(x, word_filter), items))
+
     socres = list(
-        map(
-            lambda tu: SequenceMatcher(None, tu[0], tu[1]).ratio(),
-            map(lambda item: (word.lower(), item.lower()), items),
-        )
+        get_scores(word, items)
     )
     max_score = max(socres)
     idx = socres.index(max_score)
-    return idx, max_score
+    word_split = word.split()
+
+    if max_score > 0.75 or not word_split:
+        return idx, max_score
+
+    for idx, item in enumerate(items):
+        if item in word or word in item:
+            return idx, 1.0
+
+    items_split = list(
+        map(lambda x: max(x.split()) if len(x.split()) > 0 else x, items)
+    )
+    word_max = max(word_split)
+    socres = list(
+        get_scores(word_max, items_split)
+    )
+    max_score_split = max(socres)
+    idx_split = socres.index(max_score_split)
+    if max_score > max_score_split:
+        return idx, max_score
+    return idx_split, max_score_split
 
 
 def get_scores(word, items):
@@ -29,21 +57,9 @@ def get_word_list_diff(words_a, words_b):
     words_b = sorted(words_b)
 
     result = []
-    stocks_b_short = list(
-        map(lambda x: max(x.split()) if len(x.split()) > 0 else x, words_b)
-    )
     for ida, stock_a in enumerate(words_a):
         _, max_score = get_best_match(stock_a, words_b)
         if max_score > 0.75:
             result.append(ida)
-        else:
-            word_splited = stock_a.split()
-            if not word_splited:
-                continue
-            _, max_score_short = get_best_match(
-                max(word_splited), stocks_b_short
-            )
-            if max_score_short == 1.0:
-                result.append(ida)
     missing = [value for idx, value in enumerate(words_a) if idx not in result]
     return missing

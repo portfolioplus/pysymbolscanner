@@ -31,6 +31,10 @@ def create_test_data():
             'fr': None,
             'es': None,
         },
+        'Amadeus FiRe': {
+            'en': None,
+            'de': None,
+        },
         'BMW': {
             'en': None,
             'de': None,
@@ -121,6 +125,13 @@ class TestWiki(unittest.TestCase):
         self.assertEqual(len(items_bmw.isins), 1)
         self.assertEqual(len(items_bmw.symbols), 1)
         self.assertIn('Automotive', items_bmw.industry)
+        amadeus = get_merged_infobox('Amadeus FiRe', ['de', 'en'])
+        self.assertEqual(amadeus.name, 'Amadeus FiRe AG')
+        self.assertEqual(amadeus.founded, 2003)
+        self.assertEqual(amadeus.employees, 2907)
+        self.assertEqual(amadeus.location, 'Germany')
+        self.assertEqual(len(amadeus.isins), 1)
+        self.assertEqual(len(amadeus.symbols), 0)
 
     def test_get_country(self):
         """
@@ -149,3 +160,4 @@ class TestWiki(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+    # Abengoa S.A. - SDAX, Red Arrow Studios GmbH?

@@ -67,6 +67,12 @@ class Infobox:
             self.isins = list(set(self.symbols + infobox.isins))
 
 
+def clean_html(raw_html):
+    cleanr = re.compile('<.*?>')
+    cleantext = re.sub(cleanr, '', raw_html)
+    return cleantext
+
+
 def get_value(infobox, keys):
     return next(
         filter(
@@ -84,6 +90,7 @@ def get_location(
         'location_country',
         'hq_location_country',
         'location',
+        'land',
         'sitz',
         'siège (pays)',
         'sede',
@@ -134,6 +141,9 @@ def get_name(infobox, keys=['name', 'nam', 'nombre']):
     names = re.findall(r'{{color\|.+?\|(.+?)}}', name)
     if names:
         return names[0]
+    names = re.findall(r'{{[a-z]+\|(.+?)}}', name)
+    if names:
+        return names[0]
     return name
 
 
@@ -148,7 +158,7 @@ def get_symbols(infobox, keys=['traded_as', 'action', 'símbolo_bursátil']):
 def find_by_alpha_code(wiki_str, translate):
     result = None
     # find by alpha 2 or alpha 3 code
-    for word_length in [2, 3]:
+    for word_length in [3, 2]:
         if result:
             break
 
@@ -179,8 +189,8 @@ def find_by_alpha_code(wiki_str, translate):
 def get_country(loc, mystr):
     if not mystr:
         return None
-    mystr = re.sub('[^0-9a-zA-Z _-]+', '', unidecode(mystr))
-
+    mystr = re.sub('[^0-9a-zA-Z _-]+', ' ', unidecode(mystr))
+    mystr = clean_html(mystr)
     if loc != 'en':
         # load language of wiki page
         lang = gettext.translation(
