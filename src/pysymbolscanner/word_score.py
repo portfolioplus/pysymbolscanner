@@ -1,4 +1,5 @@
 from difflib import SequenceMatcher
+import re
 
 
 def _remove(word, word_filter):
@@ -8,32 +9,36 @@ def _remove(word, word_filter):
     return word
 
 
+def _is_word_in_sentence(word, sentence):
+    return re.compile(r'\b({0})\b'.format(word), flags=re.IGNORECASE).search(
+        sentence
+    )
+
+
 def get_best_match(word, items, word_filter=[]):
     if word_filter:
         word = _remove(word, word_filter)
         items = list(map(lambda x: _remove(x, word_filter), items))
 
-    socres = list(
-        get_scores(word, items)
-    )
+    socres = list(get_scores(word, items))
     max_score = max(socres)
     idx = socres.index(max_score)
     word_split = word.split()
 
-    if max_score > 0.75 or not word_split:
+    if max_score == 1.0 and not word_split:
         return idx, max_score
 
     for idx, item in enumerate(items):
-        if item in word or word in item:
+        if _is_word_in_sentence(item, word) or _is_word_in_sentence(
+            word, item
+        ):
             return idx, 1.0
 
     items_split = list(
         map(lambda x: max(x.split()) if len(x.split()) > 0 else x, items)
     )
     word_max = max(word_split)
-    socres = list(
-        get_scores(word_max, items_split)
-    )
+    socres = list(get_scores(word_max, items_split))
     max_score_split = max(socres)
     idx_split = socres.index(max_score_split)
     if max_score > max_score_split:

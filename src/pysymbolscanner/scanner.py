@@ -37,11 +37,11 @@ class SymbolScanner:
         else:
             self.data = self.start_index()
             self.data = self.start_metadata()
+            self.data = self.start_sync()
             with open(SymbolScanner.PICKLE_FILE, 'wb') as handle:
                 pickle.dump(
                     self.data, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
-        self.data = self.start_sync()
 
     def start_sync(self):
         stocks = PyTickerSymbols()
@@ -76,16 +76,17 @@ class SymbolScanner:
         index, endings, names = args
         wiki_stocks = self.data[index].copy()
         for idx, wiki_stock in enumerate(wiki_stocks):
-            wiki_stock_name = wiki_stock.data['short_name']
+            wiki_stock_name = wiki_stock.wiki_name
             name_id, max_score = get_best_match(
                 wiki_stock_name,
                 names,
                 word_filter=endings,
             )
             if max_score > 0.75:
-                wiki_stocks[idx].data['name'] = names[name_id]
+                wiki_stocks[idx].name = names[name_id]
             else:
                 self.log.warn(f'Did not find any match for {wiki_stock_name}')
+                wiki_stocks[idx].name = wiki_stock_name
         return {index: wiki_stocks}
 
     def get_most_common_endings(self, names):
@@ -98,7 +99,7 @@ class SymbolScanner:
 
         for index in self.data:
             for stock in self.data[index]:
-                name = stock.data['short_name']
+                name = stock.wiki_name
                 if not name.split():
                     continue
                 word = name.split()[-1]
@@ -127,14 +128,14 @@ class SymbolScanner:
 
     def worker_metadata(self, args):
         stock, langs = args
-        infobox = get_merged_infobox(stock.data['short_name'], langs)
+        infobox = get_merged_infobox(stock.wiki_name, langs)
         if not infobox:
             self.log.warn(
                 'Did not find any wikipedia data'
-                f'for {stock.data["short_name"]}'
+                f'for {stock.wiki_name}'
             )
             return stock
-        return infobox.to_stock(stock.data['indices'])
+        return infobox.to_stock(stock.indices)
 
     def start_index(self):
         with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
@@ -167,6 +168,6 @@ class SymbolScanner:
             df = df[['name', 'symbol']]
         result = {key: []}
         for wiki_name, symbol in zip(df.name, df.symbol):
-            stock = Stock.from_wiki(key, wiki_name, symbol)
+            stock = Stock.from_wiki([key], wiki_name, symbol)
             result[key].append(stock)
         return result

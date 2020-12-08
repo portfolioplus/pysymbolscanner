@@ -160,4 +160,3 @@ class TestWiki(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-    # Abengoa S.A. - SDAX, Red Arrow Studios GmbH?

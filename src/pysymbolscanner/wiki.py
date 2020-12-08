@@ -11,14 +11,10 @@ def _get_infobox_of_page(name, lang):
                 'boxterm': 'Ficha',
                 'skip': ['imageinfo'],
                 'silent': True,
-                'lang': lang
+                'lang': lang,
             }
         else:
-            opt = {
-                'skip': ['imageinfo'],
-                'silent': True,
-                'lang': lang
-            }
+            opt = {'skip': ['imageinfo'], 'silent': True, 'lang': lang}
         page = wptools.page(name, **opt).get_parse()
         infobox = page.data['infobox']
         if infobox:
@@ -48,7 +44,7 @@ def _is_infobox(infobox):
         'mitarbeiterzahl',
         'nombre',
         'empleados',
-        'sede'
+        'sede',
     ]
     ctx = sum(map(lambda x: 1 if x in infobox else 0, infobox_items))
     if ctx > 1:
@@ -56,10 +52,17 @@ def _is_infobox(infobox):
     return False
 
 
+def _is_in_infobox(infobox, value):
+    result = any(
+        list(map(lambda x: value.lower() in x.lower(), infobox.values()))
+    )
+    return result
+
+
 def get_wiki_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):
     for lang in lang_codes:
         infobox = _get_infobox_of_page(page_search, lang)
-        if _is_infobox(infobox):
+        if _is_infobox(infobox) and _is_in_infobox(infobox, page_search):
             return infobox, lang
         wp.set_lang(lang)
         search = wp.search(page_search)
@@ -71,7 +74,7 @@ def get_wiki_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):
         sorted_scored_search.reverse()
         for item in sorted_scored_search:
             infobox = _get_infobox_of_page(item[1], lang)
-            if _is_infobox(infobox):
+            if _is_infobox(infobox) and _is_in_infobox(infobox, page_search):
                 return infobox, lang
     return None
 

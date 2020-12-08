@@ -189,7 +189,8 @@ def find_by_alpha_code(wiki_str, translate):
 def get_country(loc, mystr):
     if not mystr:
         return None
-    mystr = re.sub('[^0-9a-zA-Z _-]+', ' ', unidecode(mystr))
+    mystr = mystr.replace('.', '')
+    mystr = re.sub(r'[^0-9a-zA-Z _-]+', ' ', unidecode(mystr))
     mystr = clean_html(mystr)
     if loc != 'en':
         # load language of wiki page
