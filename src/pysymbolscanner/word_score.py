@@ -22,11 +22,10 @@ def get_best_match(word, items, word_filter=[]):
 
     socres = list(get_scores(word, items))
     max_score = max(socres)
-    idx = socres.index(max_score)
-    word_split = word.split()
+    idx_max_score = socres.index(max_score)
 
-    if max_score == 1.0 and not word_split:
-        return idx, max_score
+    if max_score == 1.0:
+        return idx_max_score, max_score
 
     for idx, item in enumerate(items):
         if _is_word_in_sentence(item, word) or _is_word_in_sentence(
@@ -34,16 +33,7 @@ def get_best_match(word, items, word_filter=[]):
         ):
             return idx, 1.0
 
-    items_split = list(
-        map(lambda x: max(x.split()) if len(x.split()) > 0 else x, items)
-    )
-    word_max = max(word_split)
-    socres = list(get_scores(word_max, items_split))
-    max_score_split = max(socres)
-    idx_split = socres.index(max_score_split)
-    if max_score > max_score_split:
-        return idx, max_score
-    return idx_split, max_score_split
+    return idx_max_score, max_score
 
 
 def get_scores(word, items):

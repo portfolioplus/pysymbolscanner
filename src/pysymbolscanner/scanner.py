@@ -82,7 +82,7 @@ class SymbolScanner:
                 names,
                 word_filter=endings,
             )
-            if max_score > 0.75:
+            if max_score > 0.8:
                 wiki_stocks[idx].name = names[name_id]
             else:
                 self.log.warn(f'Did not find any match for {wiki_stock_name}')

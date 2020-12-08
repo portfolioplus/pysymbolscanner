@@ -6,7 +6,7 @@
   can be found in the LICENSE file.
 """
 import unittest
-from pysymbolscanner.word_score import get_word_list_diff, get_best_match
+from pysymbolscanner.word_score import get_best_match, get_score, get_word_list_diff
 
 
 class TestWordScore(unittest.TestCase):
@@ -24,6 +24,12 @@ class TestWordScore(unittest.TestCase):
         result = get_word_list_diff(words_b, words_a)
         self.assertEqual(len(result), 1)
         self.assertIn('bibo', result)
+
+    def test_word_score(self):
+        score = get_score('Telia', 'Tesla')
+        self.assertEqual(score, 0.8)
+        score = get_score('Tesli', 'Tesla')
+        self.assertEqual(score, 0.8)
 
     def test_best_match(self):
         """
