@@ -87,8 +87,10 @@ def get_location(
     infobox,
     lang,
     keys=[
+        'native_name_lang',
         'location_country',
         'hq_location_country',
+        'hq_location',
         'location',
         'land',
         'sitz',
@@ -112,6 +114,7 @@ def get_foundation_date(
         'date de création',
         'dates-clés',
         'fundación',
+        'gründung_verein',
     ],
 ):
     founded = get_value(infobox, keys)
@@ -133,17 +136,18 @@ def get_employees(
     return employees
 
 
-def get_name(infobox, keys=['name', 'nam', 'nombre']):
+def get_name(infobox, keys=['name', 'nam', 'nombre', 'unternehmen']):
     name = get_value(infobox, keys)
-    if not ('{{color|' in name and '}}' in name):
-        return name
+    regex_values = [
+        r'{{color\|.+?\|(.+?)}}',
+        r'{{[a-z]+\|(.+?)}}',
+        r'\[\[#(.+?)\|.+?\]\]',
+    ]
+    for regex in regex_values:
+        names = re.findall(regex, name)
+        if names:
+            return names[0]
 
-    names = re.findall(r'{{color\|.+?\|(.+?)}}', name)
-    if names:
-        return names[0]
-    names = re.findall(r'{{[a-z]+\|(.+?)}}', name)
-    if names:
-        return names[0]
     return name
 
 
@@ -151,7 +155,7 @@ def get_symbols(infobox, keys=['traded_as', 'action', 'símbolo_bursátil']):
     val = get_value(infobox, keys)
     symbols = re.findall(r'{{([a-zA-Z_: ]+)}}', val)
     if not symbols:
-        symbols = re.findall(r'{{([a-zA-Z_| ]+)}}', val)
+        symbols = re.findall(r'{{([a-zA-Z_|\- ]+)}}', val)
     return symbols
 
 
@@ -190,8 +194,10 @@ def get_country(loc, mystr):
     if not mystr:
         return None
     mystr = mystr.replace('.', '')
-    mystr = re.sub(r'[^0-9a-zA-Z _-]+', ' ', unidecode(mystr))
+    mystr = re.sub(r'[^0-9a-zA-Z _-]+', ' ', unidecode(mystr)).strip()
     mystr = clean_html(mystr)
+    if mystr == 'Russia':
+        mystr = 'Russian Federation'
     if loc != 'en':
         # load language of wiki page
         lang = gettext.translation(

@@ -1,6 +1,5 @@
 import wikipedia as wp
 import wptools
-from pysymbolscanner.word_score import get_scores
 from pysymbolscanner.infobox import Infobox
 
 
@@ -35,6 +34,8 @@ def _is_infobox(infobox):
         'name',
         'foundation',
         'hq_location_country',
+        'unternehmen',
+        'gründung_verein',
         'location',
         'industry',
         'num_employees',
@@ -45,6 +46,7 @@ def _is_infobox(infobox):
         'nombre',
         'empleados',
         'sede',
+        'sitz'
     ]
     ctx = sum(map(lambda x: 1 if x in infobox else 0, infobox_items))
     if ctx > 1:
@@ -53,27 +55,57 @@ def _is_infobox(infobox):
 
 
 def _is_in_infobox(infobox, value):
-    result = any(
-        list(map(lambda x: value.lower() in x.lower(), infobox.values()))
-    )
+    ignore = [
+        'SA',
+        'S.A.',
+        'Aktiengeselschaft',
+        'AG',
+        'Ag',
+        'ag',
+        'SE',
+        'S.E.',
+        'plc',
+        'Plc',
+        'PLC',
+        'GmbH',
+        '&',
+        'Co.',
+        'KGaA',
+        'Corp.',
+        'Co.',
+        'Inc.'
+        '(Class C)',
+        '(Class B)',
+        '(Class A)',
+        '(A)',
+        '(B)',
+        '(C)',
+        'OJSC',
+        'PJSC',
+    ]
+    value = value.replace('Rosagro', 'Rusagro')
+    values = [value] if len(value.split()) == 0 else value.split()
+    values = list(filter(lambda x: x not in ignore, values))
+    ctx = 0
+    for value in values:
+        if any(
+            map(
+                lambda x, val=value: val.lower() in x.lower(), infobox.values()
+            )
+        ):
+            ctx += 1
+    result = ctx / len(values) > 0.5
     return result
 
 
 def get_wiki_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):
     for lang in lang_codes:
-        infobox = _get_infobox_of_page(page_search, lang)
-        if _is_infobox(infobox) and _is_in_infobox(infobox, page_search):
-            return infobox, lang
         wp.set_lang(lang)
-        search = wp.search(page_search)
-        scores = get_scores(page_search, search)
-        scored_search = zip(scores, search)
-        sorted_scored_search = list(
-            sorted(scored_search, key=lambda tup: tup[0])
-        )
-        sorted_scored_search.reverse()
-        for item in sorted_scored_search:
-            infobox = _get_infobox_of_page(item[1], lang)
+        search = wp.search(page_search, results=3)
+        if not search:
+            continue
+        for item in search:
+            infobox = _get_infobox_of_page(item, lang)
             if _is_infobox(infobox) and _is_in_infobox(infobox, page_search):
                 return infobox, lang
     return None

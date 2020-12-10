@@ -3,6 +3,7 @@ class Stock:
         self,
         name,
         wiki_name,
+        link,
         main_symbol,
         loc,
         indices,
@@ -15,6 +16,7 @@ class Stock:
         self.data = {
             'name': name,
             'wiki_name': wiki_name,
+            'link': link,
             'symbol': main_symbol,
             'country': loc,
             'indices': indices,
@@ -25,8 +27,8 @@ class Stock:
         }
 
     @classmethod
-    def from_wiki(cls, indices, wiki_name, symbol):
-        return cls('', wiki_name, symbol, '', indices, [], [], [], 0, 0)
+    def from_wiki(cls, indices, wiki_name, link, symbol):
+        return cls('', wiki_name, link, symbol, '', indices, [], [], [], 0, 0)
 
     def to_pyticker_symbol(self):
         return {
@@ -63,6 +65,14 @@ class Stock:
     @symbol.setter
     def symbol(self, symbol):
         self.data['symbol'] = symbol
+
+    @property
+    def link(self):
+        return self.data['symbol']
+
+    @link.setter
+    def link(self, link):
+        self.data['link'] = link
 
     @property
     def country(self):

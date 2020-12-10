@@ -69,10 +69,18 @@ def fix_missing(missings, index, stocks_yaml):
     for missing in missings:
         not_exists = True
         for stock in stocks_yaml['companies']:
-            if stock['name'] == missing['name']:
+            if (
+                stock['name'] == missing['name']
+                and index not in stock['indices']
+            ):
                 idx = stock.get('indices', [])
                 idx.append(index)
                 stock['indices'] = idx
+                stock['isins'] = missing['isins']
+                stock['metadata'] = missing['metadata']
+                for symbol in missing['symbols']:
+                    if symbol not in stock['symbols']:
+                        stock['symbols'].append(symbol)
                 not_exists = False
                 break
         if not_exists:
@@ -83,7 +91,7 @@ def fix_missing(missings, index, stocks_yaml):
 def fix_wrong(wrongs, index, stocks_yaml):
     for wrong in wrongs:
         for stock in stocks_yaml['companies']:
-            if stock['name'] == wrong['name']:
+            if stock['name'] == wrong['name'] and index in stock['indices']:
                 stock['indices'].remove(index)
     return stocks_yaml
 

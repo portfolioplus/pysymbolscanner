@@ -28,12 +28,12 @@ class Indices:
         ),
         Statics.Indices.RU_MOEX: IndexSource(
             'RTS_Index',
-            'Components',
-            'en',
-            1,
-            'Ticker symbol',
-            'Company',
-            ['en'],
+            'Zusammensetzung',
+            'de',
+            8,
+            None,
+            'Unternehmen',
+            ['en', 'de'],
         ),
         Statics.Indices.GB_FTSE: IndexSource(
             'FTSE_100_Index',

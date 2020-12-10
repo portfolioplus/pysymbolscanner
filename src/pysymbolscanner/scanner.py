@@ -17,6 +17,8 @@ from pysymbolscanner.wiki import get_merged_infobox
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.word_score import get_best_match
 from pytickersymbols import PyTickerSymbols
+import requests
+from bs4 import BeautifulSoup
 
 
 class SymbolScanner:
@@ -85,7 +87,9 @@ class SymbolScanner:
             if max_score > 0.8:
                 wiki_stocks[idx].name = names[name_id]
             else:
-                self.log.warn(f'Did not find any match for {wiki_stock_name}')
+                self.log.warn(
+                    f'Did not find any match for {index} - {wiki_stock_name}'
+                )
                 wiki_stocks[idx].name = wiki_stock_name
         return {index: wiki_stocks}
 
@@ -113,7 +117,7 @@ class SymbolScanner:
 
     def start_metadata(self):
         result = {}
-        with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
+        with multiprocessing.Pool(processes=self.MAX_PROCESSES * 4) as pool:
             for index in self.data:
                 args = map(
                     lambda stock, idx=index: (
@@ -131,8 +135,7 @@ class SymbolScanner:
         infobox = get_merged_infobox(stock.wiki_name, langs)
         if not infobox:
             self.log.warn(
-                'Did not find any wikipedia data'
-                f'for {stock.wiki_name}'
+                'Did not find any wikipedia data' f' for {stock.wiki_name}'
             )
             return stock
         return infobox.to_stock(stock.indices)
@@ -142,7 +145,7 @@ class SymbolScanner:
             items = list(
                 map(lambda x: (x[0], x[1]), Indices.symbol_source_dict.items())
             )
-            index_results = pool.map(self.worker_index, items, chunksize=1)
+            index_results = pool.map(self.worker_index, items)
             result = dict(map(lambda val: list(val.items())[0], index_results))
             return result
 
@@ -153,21 +156,62 @@ class SymbolScanner:
             f'https://{index_source.LANG}.wikipedia.org/wiki/'
             f'{index_source.TITLE}#{index_source.SECTION}'
         )
-        dfs = pd.read_html(wiki_url)
+        response = requests.get(wiki_url)
+        links = self.get_wiki_links(response.text, index_source)
+        dfs = pd.read_html(response.text)
         df = dfs[index_source.TABLE_ID]
+        df['link'] = links
         if index_source.COL_NAME_SYMBOL is not None:
             df = df.rename(
                 columns={
                     index_source.COL_NAME_COMPANY: 'name',
                     index_source.COL_NAME_SYMBOL: 'symbol',
                 }
-            )[['name', 'symbol']]
+            )[['name', 'symbol', 'link']]
         else:
             df = df.rename(columns={index_source.COL_NAME_COMPANY: 'name'})
             df['symbol'] = None
-            df = df[['name', 'symbol']]
+            df = df[['name', 'symbol', 'link']]
         result = {key: []}
-        for wiki_name, symbol in zip(df.name, df.symbol):
-            stock = Stock.from_wiki([key], wiki_name, symbol)
+        for wiki_name, symbol, link in zip(df.name, df.symbol, df.link):
+            stock = Stock.from_wiki([key], wiki_name, link, symbol)
             result[key].append(stock)
         return result
+
+    @staticmethod
+    def get_wiki_links(html, index_source):
+        soup = BeautifulSoup(html, 'html.parser')
+        table = soup.findAll('table')[index_source.TABLE_ID]
+        links = []
+        index = -1
+        for row in table.findAll('tr'):
+            column_names = row.findAll('th')
+            if index == -1:
+                index = SymbolScanner._get_col_id(
+                    index_source.COL_NAME_COMPANY, column_names
+                )
+                continue
+            tr = row.findAll('td')[index]
+            try:
+                link = tr.find('a')['href']
+                if 'action=edit' not in link:
+                    links.append(link)
+                else:
+                    links.append('')
+            except KeyError:
+                links.append('')
+        return links
+
+    @staticmethod
+    def _get_col_id(col_name, column_names):
+        index = next(
+            iter(
+                [
+                    i
+                    for i, s in enumerate(column_names)
+                    if col_name in s.getText()
+                ]
+            ),
+            None,
+        )
+        return index
