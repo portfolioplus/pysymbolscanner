@@ -46,7 +46,7 @@ setup(
     packages=find_packages('src', exclude=EXCLUDE_FROM_PACKAGES),
     install_requires=INSTALL_REQUIRES,
     entry_points={'console_scripts': [
-            'pysymbolscanner = src.command_line:autotrader_app',
+            'pysymbolscanner = pysymbolscanner.command_line:symbolscanner_app',
     ]},
     classifiers=[
         'Development Status :: 5 - Production/Stable',
