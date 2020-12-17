@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.3 (2020-12-17)
+### Fix
+* Metadata ([`1825360`](https://github.com/portfolioplus/pysymbolscanner/commit/1825360ad759b318fac7a0e4e3e4233fd82fc279))
+
 ## v1.1.2 (2020-12-17)
 ### Fix
 * Unidecode dependency ([`c54903f`](https://github.com/portfolioplus/pysymbolscanner/commit/c54903f8610b7801be0f06559bdc61f34e9bb3e6))
