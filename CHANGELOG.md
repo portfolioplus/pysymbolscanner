@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.2 (2020-12-17)
+### Fix
+* Unidecode dependency ([`c54903f`](https://github.com/portfolioplus/pysymbolscanner/commit/c54903f8610b7801be0f06559bdc61f34e9bb3e6))
+
 ## v1.1.1 (2020-12-17)
 ### Fix
 * Entry_points ([`491bc1f`](https://github.com/portfolioplus/pysymbolscanner/commit/491bc1f1f1f0cbaf4597440855fa937404a58984))
