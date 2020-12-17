@@ -41,8 +41,8 @@ class Infobox:
             self.industry,
             self.symbols,
             self.isins,
-            self.employees,
             self.founded,
+            self.employees,
         )
 
     def update(self, infobox):
