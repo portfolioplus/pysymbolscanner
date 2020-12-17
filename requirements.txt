@@ -1,7 +1,7 @@
 PyYAML==5.3.1
 wptools==0.4.17
 wikipedia==1.4.0
-pandas==1.1.4
+pandas==1.1.5
 pycountry==20.7.3
 Unidecode==1.1.1
 pytickersymbols
