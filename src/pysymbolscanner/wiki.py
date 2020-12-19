@@ -73,10 +73,10 @@ def _is_infobox(infobox):
     return False
 
 
-def _is_in_infobox(infobox, value):
-    value = value.replace('Rosagro', 'Rusagro')
-    values = [value] if len(value.split()) == 0 else value.split()
-    values = list(filter(lambda x: x not in most_common_endings, values))
+def _is_in_infobox(infobox, search):
+    search = search.replace('Rosagro', 'Rusagro')
+    search_items = [search] if len(search.split()) == 0 else search.split()
+    values = list(filter(lambda x: x not in most_common_endings, search_items))
     ctx = 0
     for value in values:
         if any(

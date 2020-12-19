@@ -53,7 +53,7 @@ class Infobox:
             self.names.append(long_to_short(infobox.name))
             # we take the name with the most occurrences
             if (
-                len(set(map(lambda x: self.names.count(x), self.names))) > 1
+                len(set(map(self.names.count, self.names))) > 1
             ):  # checks if there is a max value
                 self.name = long_to_short(
                     max(set(self.names), key=self.names.count)
