@@ -184,6 +184,7 @@ def get_isins(infobox, keys=['isin', 'isin2', 'isin3', 'isin4']):
 
 def get_symbols(infobox, keys=['traded_as', 'action', 'símbolo_bursátil']):
     val = get_value(infobox, keys)
+    val = val.replace(r'\_', '')
     symbols = re.findall(r'{{([a-zA-Z0-9_: ]+)}}', val)
     if not symbols:
         symbols = re.findall(r'{{([a-zA-Z0-9_|\- ]+)}}', val)

@@ -116,24 +116,47 @@ def get_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):
     return parsed_infobox
 
 
+def get_wiki_page_title_and_links(link, lang_codes):
+    get_url = requests.get(link)
+    get_text = get_url.text
+    soup = BeautifulSoup(get_text, "html.parser")
+    company = soup.find('h1').text
+    links = soup.findAll(
+        'a', href=True, attrs={'class': 'interlanguage-link-target'}
+    )
+    links = list(
+        filter(
+            lambda x: x[1] in lang_codes,
+            map(lambda x: (x['href'], x['lang']), links),
+        )
+    )
+    return company, links
+
+
 def get_merged_infobox(page_search, link, link_lang, lang_codes=None):
     if lang_codes is None:
         lang_codes = ['en', 'de', 'es', 'fr']
     result = None
-    # find wiki name
+    page_search_dict = dict(map(lambda x: (x, None), lang_codes))
+
+    # find all wikipages for company name
     if link and link_lang:
         wiki_url = get_wiki_url(link_lang, link.replace('/wiki/', ''))
-        get_url = requests.get(wiki_url)
-        get_text = get_url.text
-        soup = BeautifulSoup(get_text, "html.parser")
-        company = soup.find('h1').text
-        if company:
-            page_search = company
+        company, links = get_wiki_page_title_and_links(
+            wiki_url, lang_codes
+        )
+        page_search_dict[link_lang] = company
+        for wiki_link, wiki_link_lang in links:
+            company, _ = get_wiki_page_title_and_links(
+                wiki_link, lang_codes
+            )
+            page_search_dict[wiki_link_lang] = company
 
-    for infobox in map(
-        lambda lang, search=page_search: get_infobox(search, [lang]),
-        lang_codes,
-    ):
+    # get all infobox data for each wikipage
+    for lang in lang_codes:
+        if not page_search_dict[lang]:
+            continue
+        infobox = get_infobox(page_search_dict[lang], [lang])
         if infobox is None:
             continue
 
@@ -142,8 +165,6 @@ def get_merged_infobox(page_search, link, link_lang, lang_codes=None):
         else:
             result = infobox
 
-        if result.name:
-            page_search = result.name
     return result
 
 
