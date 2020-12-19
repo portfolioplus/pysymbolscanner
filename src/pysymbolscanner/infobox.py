@@ -176,7 +176,7 @@ def get_isins(infobox, keys=['isin', 'isin2', 'isin3', 'isin4']):
         val = get_value(infobox, [key])
         if not val:
             continue
-        isins = re.findall(r'([a-zA-Z0-9]{12})', val)
+        isins = re.findall(r'([A-Z]{2}[A-Z0-9]{9}[0-9]{1})', val)
         if isins:
             result += isins
     return result

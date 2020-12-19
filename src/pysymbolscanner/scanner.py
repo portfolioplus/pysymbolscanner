@@ -52,18 +52,20 @@ class SymbolScanner:
 
         stocks_py = stocks.get_all_stocks()
 
-        names_py = list(set([
-            stock['name'] for stock in stocks_py
-        ]))
+        names_py = list(set([stock['name'] for stock in stocks_py]))
 
-        names_wiki = list(set([
-            stock.wiki_name
-            for stock_list in map(
-                lambda index: self.data[index],
-                Indices.symbol_source_dict,
+        names_wiki = list(
+            set(
+                [
+                    stock.wiki_name
+                    for stock_list in map(
+                        lambda index: self.data[index],
+                        Indices.symbol_source_dict,
+                    )
+                    for stock in stock_list
+                ]
             )
-            for stock in stock_list
-        ]))
+        )
 
         names = names_py + names_wiki
         endings = list(
@@ -92,6 +94,16 @@ class SymbolScanner:
                         return idx
         return -1
 
+    @staticmethod
+    def find_by_symbol_and_country(stock, py_stocks):
+        for idx, py_stock in enumerate(py_stocks):
+            if (
+                stock['symbol'] == py_stock['symbol']
+                and stock['country'] == py_stock['country']
+            ):
+                return idx
+        return -1
+
     def worker_sync(self, args):
         index, endings, occurrences, stocks = args
         wiki_stocks = self.data[index].copy()
@@ -102,6 +114,12 @@ class SymbolScanner:
             if name_id != -1:
                 wiki_stocks[idx].name = names[name_id]
                 continue
+
+            name_id = self.find_by_symbol_and_country(stock, stocks)
+            if name_id != -1:
+                wiki_stocks[idx].name = names[name_id]
+                continue
+
             wiki_stock_name = stock['wiki_name']
             name_id, max_score = get_best_match(
                 wiki_stock_name,
