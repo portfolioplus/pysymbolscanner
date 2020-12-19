@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.5 (2020-12-19)
+### Fix
+* Improved wiki search ([`7e6c0e9`](https://github.com/portfolioplus/pysymbolscanner/commit/7e6c0e9bf0afaa515aa1518a69d74c707c3a50e4))
+
 ## v1.1.4 (2020-12-19)
 ### Fix
 * Improved name sync ([`747e0cf`](https://github.com/portfolioplus/pysymbolscanner/commit/747e0cfe1cb61012f45c4171b9e10a76a12f8a52))
