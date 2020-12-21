@@ -15,10 +15,11 @@ import multiprocessing
 from pysymbolscanner.index_definitions import Indices
 from pysymbolscanner.wiki import get_merged_infobox, get_wiki_url
 from pysymbolscanner.stock import Stock
-from pysymbolscanner.word_score import deep_search, get_best_match
+from pysymbolscanner.word_score import deep_search, get_best_match, get_score
 from pytickersymbols import PyTickerSymbols
 import requests
 from bs4 import BeautifulSoup
+from pysymbolscanner.const import most_common_endings
 
 
 class SymbolScanner:
@@ -86,8 +87,6 @@ class SymbolScanner:
     @staticmethod
     def find_by_symbol(stock, py_stocks):
         for idx, py_stock in enumerate(py_stocks):
-            if stock['symbol'] == py_stock['symbol']:
-                return idx
             for py_symbol in py_stock['symbols']:
                 for symbol in stock['symbols']:
                     if symbol['yahoo'] == py_symbol['yahoo']:
@@ -100,6 +99,7 @@ class SymbolScanner:
             if (
                 stock['symbol'] == py_stock['symbol']
                 and stock['country'] == py_stock['country']
+                and get_score(stock['wiki_name'],  py_stock['name']) == 1.0
             ):
                 return idx
         return -1
@@ -121,10 +121,12 @@ class SymbolScanner:
                 continue
 
             wiki_stock_name = stock['wiki_name']
+            if 'Borussia' in wiki_stock_name:
+                print("")
             name_id, max_score = get_best_match(
                 wiki_stock_name,
                 names,
-                word_filter=[],
+                word_filter=most_common_endings,
             )
             if max_score > 0.8:
                 wiki_stocks[idx].name = names[name_id]
