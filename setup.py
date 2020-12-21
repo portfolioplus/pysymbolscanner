@@ -22,7 +22,7 @@ INSTALL_REQUIRES = [
     'wikipedia==1.4.0',
     'pandas==1.1.4',
     'pycountry==20.7.3',
-    'Unidecode==1.1.1',
+    'Unidecode==1.1.2',
     'pytickersymbols',
 ]
 
