@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.8 (2020-12-22)
+### Fix
+* Increased threshold ([`91da8b8`](https://github.com/portfolioplus/pysymbolscanner/commit/91da8b80dc923e8f6da10130ae9857b6d7101c88))
+
 ## v1.1.7 (2020-12-22)
 ### Fix
 * Issue deep search ([`91b093f`](https://github.com/portfolioplus/pysymbolscanner/commit/91b093ff6e54b36e3fdbe2a213f8b92a2bc12016))
