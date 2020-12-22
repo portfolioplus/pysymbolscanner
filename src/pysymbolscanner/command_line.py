@@ -5,14 +5,15 @@
   Use of this source code is governed by an MIT-style license that
   can be found in the LICENSE file.
 """
-import logging
-
 import argparse
-from pytickersymbols import PyTickerSymbols
-from pysymbolscanner.scanner import SymbolScanner
+import logging
 import os
-import yaml
 from collections import OrderedDict
+
+import yaml
+from pytickersymbols import PyTickerSymbols
+
+from pysymbolscanner.scanner import SymbolScanner
 
 logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)

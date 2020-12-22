@@ -7,19 +7,21 @@
 """
 
 import logging
+import multiprocessing
 import os
 import pickle
 import sys
+
 import pandas as pd
-import multiprocessing
-from pysymbolscanner.index_definitions import Indices
-from pysymbolscanner.wiki import get_merged_infobox, get_wiki_url
-from pysymbolscanner.stock import Stock
-from pysymbolscanner.word_score import deep_search, get_best_match, get_score
-from pytickersymbols import PyTickerSymbols
 import requests
 from bs4 import BeautifulSoup
+from pytickersymbols import PyTickerSymbols
+
 from pysymbolscanner.const import most_common_endings
+from pysymbolscanner.index_definitions import Indices
+from pysymbolscanner.stock import Stock
+from pysymbolscanner.wiki import get_merged_infobox, get_wiki_url
+from pysymbolscanner.word_score import deep_search, get_best_match, get_score
 
 
 class SymbolScanner:
@@ -72,7 +74,16 @@ class SymbolScanner:
         endings = list(
             map(lambda x: ' ' + x, self.get_most_common_endings(names))
         )
-        occurrences = list(self.get_most_common_occurrences(names))
+        occurrences = list(
+            set(
+                list(self.get_most_common_occurrences(names))
+                + most_common_endings
+                + endings
+            )
+        )
+
+        occurrences.sort(key=len, reverse=True)
+        endings.sort(key=len, reverse=True)
         with multiprocessing.Pool(processes=self.MAX_PROCESSES) as pool:
             items = list(
                 map(
@@ -99,7 +110,7 @@ class SymbolScanner:
             if (
                 stock['symbol'] == py_stock['symbol']
                 and stock['country'] == py_stock['country']
-                and get_score(stock['wiki_name'],  py_stock['name']) == 1.0
+                and get_score(stock['wiki_name'], py_stock['name']) == 1.0
             ):
                 return idx
         return -1
@@ -124,9 +135,13 @@ class SymbolScanner:
             name_id, max_score = get_best_match(
                 wiki_stock_name,
                 names,
-                word_filter=most_common_endings,
+                word_filter=occurrences,
             )
-            if max_score > 0.8:
+            if max_score > 0.9:
+                self.log.warn(
+                    f'Sync by word score. {wiki_stocks[idx].wiki_name} =='
+                    f' {names[name_id]} = {max_score}'
+                )
                 wiki_stocks[idx].name = names[name_id]
                 continue
 
@@ -135,6 +150,10 @@ class SymbolScanner:
             )
 
             if max_score > 0.9:
+                self.log.warn(
+                    f'Sync by deep search. {wiki_stocks[idx].wiki_name} =='
+                    f' {names[name_id]} = {max_score}'
+                )
                 wiki_stocks[idx].name = names[name_id]
             else:
                 self.log.warn(
