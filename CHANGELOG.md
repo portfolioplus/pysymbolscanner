@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.1.7 (2020-12-22)
+### Fix
+* Issue deep search ([`91b093f`](https://github.com/portfolioplus/pysymbolscanner/commit/91b093ff6e54b36e3fdbe2a213f8b92a2bc12016))
+
 ## v1.1.6 (2020-12-21)
 ### Fix
 * Improved name sync ([`426f04d`](https://github.com/portfolioplus/pysymbolscanner/commit/426f04d6d78497c73274edbe909246bdf24f363e))
