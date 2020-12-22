@@ -121,8 +121,6 @@ class SymbolScanner:
                 continue
 
             wiki_stock_name = stock['wiki_name']
-            if 'Borussia' in wiki_stock_name:
-                print("")
             name_id, max_score = get_best_match(
                 wiki_stock_name,
                 names,

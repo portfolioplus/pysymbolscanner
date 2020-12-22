@@ -38,7 +38,10 @@ def deep_search(word, items, ignore=[]):
             result.append(idx)
     if not result:
         return -1, -1
-    return get_best_match(word, map(lambda idx: items[idx], result))
+    idx_max_score, max_score = get_best_match(
+        word, map(lambda idx: items[idx], result)
+    )
+    return result[idx_max_score], max_score
 
 
 def get_scores(word, items):
