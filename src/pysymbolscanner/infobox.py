@@ -4,6 +4,7 @@ import gettext
 from unidecode import unidecode
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.word_score import get_best_match
+from pysymbolscanner.const import long_to_short
 
 
 class Infobox:
@@ -74,15 +75,6 @@ class Infobox:
             self.symbols = list(set(self.symbols + infobox.symbols))
         elif infobox.isins:
             self.isins = list(set(self.isins + infobox.isins))
-
-
-def long_to_short(name):
-    result = name.replace('Aktiengeselschaft', 'AG')
-    result = result.replace(', Inc.', ' Inc.')
-    result = re.sub(r' \(.+\)$', '', result)
-    if not result or not result.strip():
-        raise RuntimeError(f'Error during name processing {name}')
-    return result
 
 
 def clean_html(raw_html):
