@@ -24,11 +24,6 @@ jobs:
       - name: Run tests
         run: |
           tox
-      - name: Coveralls
-        uses: AndreMiras/coveralls-python-action@develop
-        with:
-          parallel: true
-          debug: true
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.5
         if: always()
@@ -36,9 +31,10 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           files: test-results/**/*.xml
       - name: Coveralls
-        uses: coverallsapp/github-action@master
+        uses: AndreMiras/coveralls-python-action@develop
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          parallel: true
+          debug: true
   coveralls_finish:
     needs: test
     runs-on: ubuntu-latest

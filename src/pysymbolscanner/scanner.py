@@ -22,6 +22,7 @@ from pysymbolscanner.index_definitions import Indices
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.wiki import get_merged_infobox, get_wiki_url
 from pysymbolscanner.word_score import deep_search, get_best_match, get_score
+from pysymbolscanner.yahoo import YahooSearch
 
 
 class SymbolScanner:
@@ -42,11 +43,30 @@ class SymbolScanner:
         else:
             self.data = self.start_index()
             self.data = self.start_metadata()
+            self.data = self.start_yahoo()
             self.data = self.start_sync()
             with open(SymbolScanner.PICKLE_FILE, 'wb') as handle:
                 pickle.dump(
                     self.data, handle, protocol=pickle.HIGHEST_PROTOCOL
                 )
+
+    def start_yahoo(self):
+        result = {}
+        with multiprocessing.Pool(processes=self.MAX_PROCESSES * 4) as pool:
+            for index in self.data:
+                args = map(
+                    lambda stock: stock,
+                    self.data[index],
+                )
+                stocks_with_yahoo_symbols = pool.map(self.worker_yahoo, args)
+                result[index] = stocks_with_yahoo_symbols
+        return result
+
+    def worker_yahoo(self, stock):
+        search = YahooSearch()
+        symbols = search.get_symbols(stock.name)
+        stock.yahoo_symbols = symbols
+        return stock
 
     def start_sync(self):
         stocks = PyTickerSymbols()

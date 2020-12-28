@@ -1,3 +1,6 @@
+from pysymbolscanner.utils import filter_duplicate_dicts_in_list
+
+
 class Stock:
     def __init__(
         self,
@@ -47,18 +50,25 @@ class Stock:
 
     def to_pyticker_symbol(self):
         sym = self.symbol
+        symbols = self.get_symbols(self.symbols)
+        if self.yahoo_symbols:
+            symbols += self.yahoo_symbols
+            symbols = filter_duplicate_dicts_in_list(symbols)
+
+        if not sym:
+            sym = next(map(lambda x: x['yahoo'], symbols), None)
+
         if sym and '.' in sym:
             sym = sym.split('.')[0]
+
         return {
             'name': self.name,
             'wiki_name': self.wiki_name,
-            'symbol': sym
-            if sym
-            else self.get_symbol(self.symbols),
+            'symbol': sym if sym else self.get_symbol(self.symbols),
             'country': self.country,
             'indices': self.indices,
             'industries': self.industries,
-            'symbols': self.get_symbols(self.symbols),
+            'symbols': symbols,
             'isins': self.isins,
             'metadata': self.metadata,
         }
@@ -86,6 +96,14 @@ class Stock:
     @symbol.setter
     def symbol(self, symbol):
         self.data['symbol'] = symbol
+
+    @property
+    def yahoo_symbols(self):
+        return self.data['yahoo_symbols']
+
+    @yahoo_symbols.setter
+    def yahoo_symbols(self, symbols):
+        self.data['yahoo_symbols'] = symbols
 
     @property
     def link(self):
@@ -187,11 +205,25 @@ class Stock:
         ):
             exc = exchange.upper().strip()
             if exc == 'FWB':
-                result.append({'yahoo': f'{sym}.F', 'google': f'FRA:{sym}'})
+                result.append(
+                    {
+                        'yahoo': f'{sym}.F',
+                        'google': f'FRA:{sym}',
+                        'currency': 'EUR',
+                    }
+                )
             elif exc in ['NASDAQ', 'NASDAQSYMBOL']:
-                result.append({'yahoo': sym, 'google': f'NASDAQ:{sym}'})
+                result.append(
+                    {
+                        'yahoo': sym,
+                        'google': f'NASDAQ:{sym}',
+                        'currency': 'USD',
+                    }
+                )
             elif exc in ['NYSE', 'NEW YORK STOCK EXCHANGE']:
-                result.append({'yahoo': sym, 'google': f'NYSE:{sym}'})
+                result.append(
+                    {'yahoo': sym, 'google': f'NYSE:{sym}', 'currency': 'USD'}
+                )
             elif exc == 'Euronext':
                 continue
             elif exc == 'LSE':
@@ -203,5 +235,11 @@ class Stock:
             elif exc == 'ISE':
                 continue
             elif exc == 'MICEX-RTS':
-                continue
+                result.append(
+                    {
+                        'yahoo': f'{sym}.ME',
+                        'google': f'MCX:{sym}',
+                        'currency': 'RUB',
+                    }
+                )
         return result
