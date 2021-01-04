@@ -32,7 +32,7 @@ class Infobox:
     def to_stock(self, index, symbol):
         symbols = [symbol] + self.symbols
         return Stock(
-            '',
+            self.name,
             self.name,
             '',
             '',
