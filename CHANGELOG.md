@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.2.0 (2021-01-04)
+### Feature
+* Added yahoo sync ([`7f4b0b2`](https://github.com/portfolioplus/pysymbolscanner/commit/7f4b0b2da76c420c16d5beb74b29780d645fad1f))
+
 ## v1.1.8 (2020-12-22)
 ### Fix
 * Increased threshold ([`91da8b8`](https://github.com/portfolioplus/pysymbolscanner/commit/91da8b80dc923e8f6da10130ae9857b6d7101c88))
