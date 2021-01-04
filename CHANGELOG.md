@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.2.1 (2021-01-04)
+### Fix
+* Fixed missing name in stock ([`04ac9ba`](https://github.com/portfolioplus/pysymbolscanner/commit/04ac9ba5eea59048c3cff781d7ae51559d76a20d))
+
 ## v1.2.0 (2021-01-04)
 ### Feature
 * Added yahoo sync ([`7f4b0b2`](https://github.com/portfolioplus/pysymbolscanner/commit/7f4b0b2da76c420c16d5beb74b29780d645fad1f))
