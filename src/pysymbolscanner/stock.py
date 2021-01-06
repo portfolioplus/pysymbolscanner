@@ -34,7 +34,7 @@ class Stock:
     @classmethod
     def from_wiki(cls, indices, wiki_name, link, link_lang, symbol):
         return cls(
-            '',
+            wiki_name,
             wiki_name,
             link,
             link_lang,

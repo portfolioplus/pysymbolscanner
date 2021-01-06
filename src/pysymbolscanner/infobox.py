@@ -226,6 +226,13 @@ def get_country(loc, mystr):
     mystr = 'United States' if 'California' in mystr else mystr
     mystr = 'United States' if 'Florida' in mystr else mystr
     mystr = 'United Kingdom' if 'Jersey' in mystr else mystr
+    mystr = 'Germany' if 'Berlin' in mystr and loc == 'en' else mystr
+    mystr = 'Deutschland' if 'Berlin' in mystr and loc == 'de' else mystr
+    mystr = 'United Kingdom' if 'Addlestone' in mystr else mystr
+    mystr = 'France' if 'Vertou' in mystr and loc == 'en' else mystr
+    mystr = 'Frankreich' if 'Vertou' in mystr and loc == 'de' else mystr
+    mystr = 'United States' if 'New York City' in mystr else mystr
+
     if loc != 'en':
         # load language of wiki page
         lang = gettext.translation(

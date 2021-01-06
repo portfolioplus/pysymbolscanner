@@ -64,6 +64,11 @@ class SymbolScanner:
 
     def worker_yahoo(self, stock):
         search = YahooSearch()
+        if not stock.name:
+            self.log.warn(
+                f'Item without name {stock}'
+            )
+            return stock
         symbols = search.get_symbols(stock.name)
         stock.yahoo_symbols = symbols
         return stock

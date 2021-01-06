@@ -64,6 +64,25 @@ def get_wrong_objects(index, scanner, stock_data):
     return wrong_stocks
 
 
+def fix_symbols(stocks_yaml):
+    for idx, stock in enumerate(stocks_yaml['companies']):
+        stock['id'] = idx
+        new_symbols = []
+        for symbol in stock['symbols']:
+            if symbol['yahoo'] == '-':
+                continue
+            if 'currency' not in symbol:
+                if symbol['yahoo'].endswith('.F'):
+                    symbol['currency'] = 'EUR'
+                elif symbol['yahoo'].endswith('.ME'):
+                    symbol['currency'] = 'RUB'
+                else:
+                    symbol['currency'] = 'USD'
+            new_symbols.append(symbol)
+        stock['symbols'] = new_symbols
+    return stocks_yaml
+
+
 def fix_missing(missings, index, stocks_yaml):
     for missing in missings:
         not_exists = True
@@ -76,7 +95,9 @@ def fix_missing(missings, index, stocks_yaml):
                 stock['isins'] = missing['isins']
                 stock['metadata'] = missing['metadata']
                 for symbol in missing['symbols']:
-                    if symbol not in stock['symbols']:
+                    if not any(
+                        d['yahoo'] == symbol['yahoo'] for d in stock['symbols']
+                    ):
                         stock['symbols'].append(symbol)
                 not_exists = False
                 break
@@ -128,5 +149,6 @@ def symbolscanner_app():
             wrong = get_wrong_objects(index, scanner, stock_data)
             stocks_yaml = fix_wrong(wrong, index, stocks_yaml)
             stocks_yaml = fix_missing(missing, index, stocks_yaml)
+        stocks_yaml = fix_symbols(stocks_yaml)
     with open(args.output, 'w', encoding='latin1') as out_file:
         yaml.dump(stocks_yaml, out_file, sort_keys=False)
