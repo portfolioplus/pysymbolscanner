@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.2.2 (2021-01-06)
+### Fix
+* Small improvements in country recognition ([`88223c0`](https://github.com/portfolioplus/pysymbolscanner/commit/88223c02182635ce312f439b4c9620e97cdbe02f))
+
 ## v1.2.1 (2021-01-04)
 ### Fix
 * Fixed missing name in stock ([`04ac9ba`](https://github.com/portfolioplus/pysymbolscanner/commit/04ac9ba5eea59048c3cff781d7ae51559d76a20d))
