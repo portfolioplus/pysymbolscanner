@@ -14,6 +14,7 @@ import yaml
 from pytickersymbols import PyTickerSymbols
 
 from pysymbolscanner.scanner import SymbolScanner
+from pysymbolscanner.utils import flat_list
 
 logging.getLogger('requests').setLevel(logging.WARNING)
 logging.getLogger('urllib3').setLevel(logging.WARNING)
@@ -64,6 +65,18 @@ def get_wrong_objects(index, scanner, stock_data):
     return wrong_stocks
 
 
+def update_stocks(stocks_yaml, scanner):
+    new_items = list(map(
+        lambda y: y.to_pyticker_symbol(), flat_list(scanner.data.values())
+    ))
+    for idx, stock in enumerate(stocks_yaml['companies']):
+        for new_item in new_items:
+            if new_item['name'] == stock['name']:
+                stock = _update(stock, new_item)
+                break
+    return stocks_yaml
+
+
 def fix_symbols(stocks_yaml):
     for idx, stock in enumerate(stocks_yaml['companies']):
         stock['id'] = idx
@@ -83,22 +96,24 @@ def fix_symbols(stocks_yaml):
     return stocks_yaml
 
 
+def _update(old, new):
+    old['isins'] = new['isins']
+    old['metadata'] = new['metadata']
+    for symbol in new['symbols']:
+        if not any(d['yahoo'] == symbol['yahoo'] for d in old['symbols']):
+            old['symbols'].append(symbol)
+    return old
+
+
 def fix_missing(missings, index, stocks_yaml):
     for missing in missings:
         not_exists = True
         for stock in stocks_yaml['companies']:
-            if (
-                stock['name'] == missing['name']
-                and index not in stock['indices']
-            ):
-                stock['indices'].append(index)
-                stock['isins'] = missing['isins']
-                stock['metadata'] = missing['metadata']
-                for symbol in missing['symbols']:
-                    if not any(
-                        d['yahoo'] == symbol['yahoo'] for d in stock['symbols']
-                    ):
-                        stock['symbols'].append(symbol)
+            if stock['name'] == missing['name']:
+                indices = list(set(stock['indices'] + [index]))
+                indices.sort()
+                stock['indices'] = indices
+                stock = _update(stock, missing)
                 not_exists = False
                 break
         if not_exists:
@@ -150,5 +165,6 @@ def symbolscanner_app():
             stocks_yaml = fix_wrong(wrong, index, stocks_yaml)
             stocks_yaml = fix_missing(missing, index, stocks_yaml)
         stocks_yaml = fix_symbols(stocks_yaml)
+        stocks_yaml = update_stocks(stocks_yaml, scanner)
     with open(args.output, 'w', encoding='latin1') as out_file:
         yaml.dump(stocks_yaml, out_file, sort_keys=False)

@@ -21,7 +21,7 @@ from pysymbolscanner.const import most_common_endings
 from pysymbolscanner.index_definitions import Indices
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.wiki import get_merged_infobox, get_wiki_url
-from pysymbolscanner.word_score import deep_search, get_best_match, get_score
+from pysymbolscanner.word_score import deep_search, get_best_match
 from pysymbolscanner.yahoo import YahooSearch
 
 
@@ -135,7 +135,7 @@ class SymbolScanner:
             if (
                 stock['symbol'] == py_stock['symbol']
                 and stock['country'] == py_stock['country']
-                and get_score(stock['wiki_name'], py_stock['name']) == 1.0
+                and stock['metadata'] == py_stock['metadata']
             ):
                 return idx
         return -1

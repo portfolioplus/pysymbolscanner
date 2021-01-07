@@ -9,9 +9,17 @@ import re
 
 most_common_endings = [
     'GmbH & Co. Kommanditgesellschaft auf Aktien',
+    'Compagnie Générale des Établissements',
+    'Compagnie Générale des établissements',
+    ', Société Européenne',
+    'Société Européenne',
+    ' - ',
     'GmbH & Co. KGaA',
     'AG & Co. KGaA',
+    'SE & Co. KGaA',
     'Aktiengesellschaft',
+    'Аэрофлот',
+    'PAO',
     'SA',
     'S.A.',
     'AG',

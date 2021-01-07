@@ -33,12 +33,12 @@ class YahooSearch(Consumer):
             'RUB': 3,
         }[item['currency']]
 
-    def _search_symbols(self, search):
+    def _search_symbols(self, search, isins=[]):
         search1 = search
         search2 = remove_most_common_endings(search)
         search3 = long_to_short(search)
         data = []
-        for search_item in [search1, search2, search3]:
+        for search_item in [search1, search2, search3] + isins:
             try:
                 search_result = self.search(search_item)
                 if 'quotes' not in search_result:
@@ -107,6 +107,9 @@ class YahooSearch(Consumer):
             'STU': lambda x: YahooSearch._get_symbol(x, 'FRA', 'F', 'EUR'),
             'HAN': lambda x: YahooSearch._get_symbol(x, 'FRA', 'F', 'EUR'),
             'MUN': lambda x: YahooSearch._get_symbol(x, 'FRA', 'F', 'EUR'),
+            'AMS': lambda x: YahooSearch._get_symbol(x, 'AMS', 'AS', 'EUR'),
+            'MCE': lambda x: YahooSearch._get_symbol(x, 'BME', 'MC', 'EUR'),
+            'LSE': lambda x: YahooSearch._get_symbol(x, 'LON', 'L', 'GBP'),
             'NMS': lambda x: YahooSearch._get_symbol(x, 'NASDAQ', None, 'USD'),
             'PNK': lambda x: YahooSearch._get_symbol(
                 x, 'OTCMKTS', None, 'USD'
@@ -115,8 +118,8 @@ class YahooSearch(Consumer):
             'MCX': lambda x: YahooSearch._get_symbol(x, 'MCX', 'ME', 'RUB'),
         }.get(exchange, lambda x: None)(sym)
 
-    def get_symbols(self, search):
-        data = self._search_symbols(search)
+    def get_symbols(self, search, isins=[]):
+        data = self._search_symbols(search, isins)
 
         if not data:
             return None

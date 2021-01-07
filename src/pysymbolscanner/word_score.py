@@ -1,10 +1,13 @@
 from difflib import SequenceMatcher
+from pysymbolscanner.const import long_to_short
+import re
 
 
 def _remove(word, word_filter):
     for old in word_filter:
-        if word.endswith(old):
-            word = word.replace(old, '')
+        word = re.sub(f'\\b{old.strip()}\\b', '', word)
+        word = ' '.join(word.split())
+        word = word.strip()
     return word
 
 
@@ -22,8 +25,14 @@ def _search(sentence_a, sentence_b, ignore):
 
 def get_best_match(word, items, word_filter=[]):
     if word_filter:
-        word = _remove(word, word_filter)
-        items = list(map(lambda x: _remove(x, word_filter), items))
+        new_word = _remove(word, word_filter)
+        word = new_word if new_word else word
+        items = list(
+            map(
+                lambda x: x[1] if x[1] else x[0],
+                map(lambda x: (x, _remove(x, word_filter)), items),
+            )
+        )
 
     socres = list(get_scores(word, items))
     max_score = max(socres)
@@ -32,6 +41,8 @@ def get_best_match(word, items, word_filter=[]):
 
 
 def deep_search(word, items, ignore=[]):
+    ignore = list(map(lambda x: x.lower(), ignore))
+    word = long_to_short(word)
     result = []
     for idx, item in enumerate(items):
         if _search(item.lower(), word.lower(), ignore):

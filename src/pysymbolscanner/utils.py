@@ -9,3 +9,7 @@
 
 def filter_duplicate_dicts_in_list(items):
     return [dict(t) for t in {tuple(d.items()) for d in items}]
+
+
+def flat_list(my_list):
+    return [item for sublist in my_list for item in sublist]
