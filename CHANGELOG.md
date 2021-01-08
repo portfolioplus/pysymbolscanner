@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.2.4 (2021-01-08)
+### Fix
+* Symbol sort ([`ae02a9c`](https://github.com/portfolioplus/pysymbolscanner/commit/ae02a9cc178da7204835487b4e7dc5d0f25909a1))
+
 ## v1.2.3 (2021-01-08)
 ### Fix
 * Improved word sync ([`12adc90`](https://github.com/portfolioplus/pysymbolscanner/commit/12adc909dac8b30bc11e7daf34c3789e69db7f3f))
