@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.2.3 (2021-01-08)
+### Fix
+* Improved word sync ([`12adc90`](https://github.com/portfolioplus/pysymbolscanner/commit/12adc909dac8b30bc11e7daf34c3789e69db7f3f))
+
 ## v1.2.2 (2021-01-06)
 ### Fix
 * Small improvements in country recognition ([`88223c0`](https://github.com/portfolioplus/pysymbolscanner/commit/88223c02182635ce312f439b4c9620e97cdbe02f))
