@@ -31,7 +31,8 @@ class YahooSearch(Consumer):
             'EUR': 1,
             'USD': 2,
             'RUB': 3,
-        }[item['currency']]
+            'GBP': 4,
+        }.get(item['currency'], 99)
 
     def _search_symbols(self, search, isins=[]):
         search1 = search
