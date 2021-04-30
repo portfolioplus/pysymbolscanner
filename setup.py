@@ -16,7 +16,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 INSTALL_REQUIRES = [
-    'wheel==0.35.1',
+    'wheel==0.36.2',
     'PyYAML==5.4.1',
     'wptools==0.4.17',
     'wikipedia==1.4.0',
