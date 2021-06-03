@@ -66,9 +66,9 @@ def get_wrong_objects(index, scanner, stock_data):
 
 
 def update_stocks(stocks_yaml, scanner):
-    new_items = list(map(
-        lambda y: y.to_pyticker_symbol(), flat_list(scanner.data.values())
-    ))
+    new_items = list(
+        map(lambda y: y.to_pyticker_symbol(), flat_list(scanner.data.values()))
+    )
     for idx, stock in enumerate(stocks_yaml['companies']):
         for new_item in new_items:
             if new_item['name'] == stock['name']:
@@ -166,5 +166,5 @@ def symbolscanner_app():
             stocks_yaml = fix_missing(missing, index, stocks_yaml)
         stocks_yaml = fix_symbols(stocks_yaml)
         stocks_yaml = update_stocks(stocks_yaml, scanner)
-    with open(args.output, 'w', encoding='latin1') as out_file:
-        yaml.dump(stocks_yaml, out_file, sort_keys=False)
+    with open(args.output, 'w') as out_file:
+        yaml.dump(stocks_yaml, out_file, sort_keys=False, allow_unicode=True)
