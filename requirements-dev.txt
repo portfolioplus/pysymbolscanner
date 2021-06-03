@@ -1,6 +1,6 @@
 wheel
 pytest
 pytest-cov
-flake8==3.9.1
+flake8==3.9.2
 autopep8==1.5.7
 black==21.4b2
