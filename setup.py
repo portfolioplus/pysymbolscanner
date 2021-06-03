@@ -16,7 +16,6 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 INSTALL_REQUIRES = [
-    'wheel==0.35.1',
     'PyYAML==5.4.1',
     'wptools==0.4.17',
     'wikipedia==1.4.0',
@@ -24,7 +23,7 @@ INSTALL_REQUIRES = [
     'pycountry==20.7.3',
     'Unidecode==1.2.0',
     'uplink==0.9.4',
-    'pytickersymbols',
+    'pytickersymbols>=1.6.0',
 ]
 
 with open('src/pysymbolscanner/__init__.py', 'r') as fd:
