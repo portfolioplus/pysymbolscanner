@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.5.0 (2021-06-03)
+### Feature
+* Fix dependencies ([`aba7461`](https://github.com/portfolioplus/pysymbolscanner/commit/aba7461e38ee0c6f20e525e1f61de551e0104c78))
+
 ## v1.4.0 (2021-06-03)
 ### Feature
 * Fix requirements ([`fd60ccf`](https://github.com/portfolioplus/pysymbolscanner/commit/fd60ccf04fe5d13943cff92b86d82791a7c6a4e5))
