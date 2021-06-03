@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.3.0 (2021-06-03)
+### Feature
+* Allow unicode in yaml dump ([`f69685e`](https://github.com/portfolioplus/pysymbolscanner/commit/f69685ea7e75e894103bca9aa3ab891f58596d8d))
+
 ## v1.2.4 (2021-01-08)
 ### Fix
 * Symbol sort ([`ae02a9c`](https://github.com/portfolioplus/pysymbolscanner/commit/ae02a9cc178da7204835487b4e7dc5d0f25909a1))
