@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.4.0 (2021-06-03)
+### Feature
+* Fix requirements ([`fd60ccf`](https://github.com/portfolioplus/pysymbolscanner/commit/fd60ccf04fe5d13943cff92b86d82791a7c6a4e5))
+
 ## v1.3.0 (2021-06-03)
 ### Feature
 * Allow unicode in yaml dump ([`f69685e`](https://github.com/portfolioplus/pysymbolscanner/commit/f69685ea7e75e894103bca9aa3ab891f58596d8d))
