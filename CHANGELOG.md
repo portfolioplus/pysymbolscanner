@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.6.0 (2021-06-04)
+### Feature
+* Fixed encoding issue ([`3e67434`](https://github.com/portfolioplus/pysymbolscanner/commit/3e6743417b536605bc0c1fa0b8bf66b40408111d))
+
 ## v1.5.0 (2021-06-03)
 ### Feature
 * Fix dependencies ([`aba7461`](https://github.com/portfolioplus/pysymbolscanner/commit/aba7461e38ee0c6f20e525e1f61de551e0104c78))
