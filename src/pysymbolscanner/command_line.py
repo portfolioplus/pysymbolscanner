@@ -157,7 +157,7 @@ def symbolscanner_app():
     scanner.start()
     indices = stock_data.get_all_indices()
     stocks_yaml = None
-    with open(args.input, 'r') as in_file:
+    with open(args.input, 'r', encoding='utf8') as in_file:
         stocks_yaml = yaml.safe_load(in_file)
         for index in indices:
             missing = get_missing_objects(index, scanner, stock_data)
@@ -167,4 +167,10 @@ def symbolscanner_app():
         stocks_yaml = fix_symbols(stocks_yaml)
         stocks_yaml = update_stocks(stocks_yaml, scanner)
     with open(args.output, 'w') as out_file:
-        yaml.dump(stocks_yaml, out_file, sort_keys=False, allow_unicode=True)
+        yaml.safe_dump(
+            stocks_yaml,
+            out_file,
+            sort_keys=False,
+            encoding='utf-8',
+            allow_unicode=True,
+        )
