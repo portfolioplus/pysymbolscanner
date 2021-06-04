@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.7.0 (2021-06-04)
+### Feature
+* Removed id field in yaml file ([`dc504b4`](https://github.com/portfolioplus/pysymbolscanner/commit/dc504b4521b39b04043db39fc4197e6105f65319))
+
 ## v1.6.0 (2021-06-04)
 ### Feature
 * Fixed encoding issue ([`3e67434`](https://github.com/portfolioplus/pysymbolscanner/commit/3e6743417b536605bc0c1fa0b8bf66b40408111d))
