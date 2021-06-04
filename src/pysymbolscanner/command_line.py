@@ -79,7 +79,6 @@ def update_stocks(stocks_yaml, scanner):
 
 def fix_symbols(stocks_yaml):
     for idx, stock in enumerate(stocks_yaml['companies']):
-        stock['id'] = idx
         new_symbols = []
         for symbol in stock['symbols']:
             if symbol['yahoo'] == '-':
