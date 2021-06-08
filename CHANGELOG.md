@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.7.1 (2021-06-08)
+### Fix
+* Fixed country sync and word filter ([`89bfbff`](https://github.com/portfolioplus/pysymbolscanner/commit/89bfbff5f07d397a1337bc27263f3e17434ed804))
+
 ## v1.7.0 (2021-06-04)
 ### Feature
 * Removed id field in yaml file ([`dc504b4`](https://github.com/portfolioplus/pysymbolscanner/commit/dc504b4521b39b04043db39fc4197e6105f65319))
