@@ -1,11 +1,10 @@
 from difflib import SequenceMatcher
 from pysymbolscanner.const import long_to_short
-import re
 
 
 def _remove(word, word_filter):
     for old in word_filter:
-        word = re.sub(f'\\b{old.strip()}\\b', '', word)
+        word = word.replace(old, '').strip()
         word = ' '.join(word.split())
         word = word.strip()
     return word

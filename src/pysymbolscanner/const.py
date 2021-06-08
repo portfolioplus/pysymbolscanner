@@ -33,6 +33,7 @@ most_common_endings = [
     'GmbH',
     'KGaA',
     'Corp.',
+    'Corp',
     'Co.',
     'Inc.',
     '(Class C)',
@@ -49,7 +50,28 @@ most_common_endings = [
     '(Company)',
 ]
 
-blocklist_search = ['SDAX', 'MDAX', 'TecDAX', 'S&P 500']
+blocklist_search = ['SDAX', 'MDAX', 'TecDAX', 'S&P 500', 'IBEX 35']
+
+locations = {
+    'OMX Helsinki 25': 'Finland',
+    'SDAX': 'Germany',
+    'MOEX': 'Russian Federation',
+    'FTSE 100': 'United Kingdom',
+    'S&P 100': 'United States',
+    'IBEX 35': 'Finland',
+    'DOW JONES': 'United States',
+    'DAX': 'Germany',
+    'CAC Mid 60': 'France',
+    'TECDAX': 'Germany',
+    'NASDAQ 100': 'United States',
+    'Switzerland 20': 'Switzerland',
+    'CAC 40': 'France',
+    'S&P 500': 'United States',
+    'OMX Stockholm 30': 'Sweden',
+    'BEL 20': 'Belgium',
+    'MDAX': 'Germany',
+    'AEX': 'Netherlands',
+}
 
 
 def remove_most_common_endings(company):

@@ -6,16 +6,26 @@
   can be found in the LICENSE file.
 """
 import unittest
-from pysymbolscanner.word_score import deep_search, get_best_match, get_score
+from pysymbolscanner.word_score import (
+    deep_search,
+    get_best_match,
+    get_score,
+    _remove,
+)
 
 
 class TestWordScore(unittest.TestCase):
-
     def test_word_score(self):
         score = get_score('Telia', 'Tesla')
         self.assertEqual(score, 0.8)
         score = get_score('Tesli', 'Tesla')
         self.assertEqual(score, 0.8)
+
+    def test_word_filter(self):
+        nortfolk = _remove(
+            'Norfolk Southern Corp.', ['Southern', 'Corp.', 'Corp']
+        )
+        self.assertEqual(nortfolk, 'Norfolk')
 
     def test_best_match(self):
         """
