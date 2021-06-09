@@ -97,8 +97,15 @@ def fix_symbols(stocks_yaml):
 
 def _update(old, new):
     old['isins'] = list(set(old.get('isins', []) + new['isins']))
+    old['isins'] = list(filter(lambda x: '*id' not in x, old['isins']))
+    old['isins'].sort()
     for key, value in new['metadata'].items():
-        if value is not None and value != 0 and value != '':
+        if (
+            value is not None
+            and value != 0
+            and value != ''
+            and (isinstance(value, str) and '*id' not in value)
+        ):
             old['metadata'][key] = value
     for symbol in new['symbols']:
         if not any(d['yahoo'] == symbol['yahoo'] for d in old['symbols']):
