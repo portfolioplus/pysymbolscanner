@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.7.5 (2021-06-09)
+### Fix
+* Removed id string ([`4149ed2`](https://github.com/portfolioplus/pysymbolscanner/commit/4149ed2d787ca15b0e72c17f0dd4196a7c3455b2))
+
 ## v1.7.4 (2021-06-09)
 ### Fix
 * Ignore wrong metadata ([`e2bff91`](https://github.com/portfolioplus/pysymbolscanner/commit/e2bff91d8af91532908474e1157c4329adf1d5a6))
