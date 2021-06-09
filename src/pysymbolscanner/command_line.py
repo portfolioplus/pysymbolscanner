@@ -96,8 +96,10 @@ def fix_symbols(stocks_yaml):
 
 
 def _update(old, new):
-    old['isins'] = new['isins']
-    old['metadata'] = new['metadata']
+    old['isins'] = list(set(old.get('isins', []) + new['isins']))
+    for key, value in new['metadata'].items():
+        if value is not None and value != 0 and value != '':
+            old['metadata'][key] = value
     for symbol in new['symbols']:
         if not any(d['yahoo'] == symbol['yahoo'] for d in old['symbols']):
             old['symbols'].append(symbol)
