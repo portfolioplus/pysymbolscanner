@@ -5,7 +5,7 @@ from unidecode import unidecode
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.word_score import get_best_match
 from pysymbolscanner.const import long_to_short
-from pip._internal import locations
+from pysymbolscanner.const import locations
 
 
 class Infobox:
@@ -33,8 +33,8 @@ class Infobox:
     def to_stock(self, index, symbol):
         symbols = [symbol] + self.symbols
         loc = self.location
-        if loc is None or loc == '':
-            loc = locations.get(index, '')
+        if (loc is None or loc == '') and len(index) > 0:
+            loc = locations.get(index[0], '')
         return Stock(
             self.name,
             self.name,
