@@ -146,7 +146,9 @@ class SymbolScanner:
         for idx, wiki_stock in enumerate(wiki_stocks):
             stock = wiki_stock.to_pyticker_symbol()
             names = [stock['name'] for stock in stocks]
+            names_wiki = [stock.get('wiki_name', '') for stock in stocks]
             name_id = self.find_by_symbol(stock, stocks)
+
             if name_id != -1:
                 wiki_stocks[idx].name = names[name_id]
                 continue
@@ -162,6 +164,14 @@ class SymbolScanner:
                 names,
                 word_filter=occurrences,
             )
+
+            if max_score < 0.9:
+                name_id, max_score = get_best_match(
+                    wiki_stock_name,
+                    names_wiki,
+                    word_filter=occurrences,
+                )
+
             if max_score > 0.9:
                 self.log.warn(
                     f'Sync by word score. {wiki_stocks[idx].wiki_name} =='
