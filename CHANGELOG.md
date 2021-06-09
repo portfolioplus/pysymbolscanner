@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.7.3 (2021-06-09)
+### Fix
+* Added sync via wiki names ([`c8731cc`](https://github.com/portfolioplus/pysymbolscanner/commit/c8731cce72b62a22e4e8d917061e18e38f43c3b3))
+
 ## v1.7.2 (2021-06-09)
 ### Fix
 * Fixed issue in fallback locaction in infobox ([`3a8a8e4`](https://github.com/portfolioplus/pysymbolscanner/commit/3a8a8e488a3dafefc7d469d26055b678c3b00934))
