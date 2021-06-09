@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.7.2 (2021-06-09)
+### Fix
+* Fixed issue in fallback locaction in infobox ([`3a8a8e4`](https://github.com/portfolioplus/pysymbolscanner/commit/3a8a8e488a3dafefc7d469d26055b678c3b00934))
+
 ## v1.7.1 (2021-06-08)
 ### Fix
 * Fixed country sync and word filter ([`89bfbff`](https://github.com/portfolioplus/pysymbolscanner/commit/89bfbff5f07d397a1337bc27263f3e17434ed804))
