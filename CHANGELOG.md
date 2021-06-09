@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.7.4 (2021-06-09)
+### Fix
+* Ignore wrong metadata ([`e2bff91`](https://github.com/portfolioplus/pysymbolscanner/commit/e2bff91d8af91532908474e1157c4329adf1d5a6))
+
 ## v1.7.3 (2021-06-09)
 ### Fix
 * Added sync via wiki names ([`c8731cc`](https://github.com/portfolioplus/pysymbolscanner/commit/c8731cce72b62a22e4e8d917061e18e38f43c3b3))
