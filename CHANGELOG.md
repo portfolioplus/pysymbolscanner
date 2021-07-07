@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.7.6 (2021-07-07)
+### Fix
+* Fallback location ([`8d5bef9`](https://github.com/portfolioplus/pysymbolscanner/commit/8d5bef90bddc5aba2dd6a4ab6172ea2d97049b15))
+
 ## v1.7.5 (2021-06-09)
 ### Fix
 * Removed id string ([`4149ed2`](https://github.com/portfolioplus/pysymbolscanner/commit/4149ed2d787ca15b0e72c17f0dd4196a7c3455b2))
