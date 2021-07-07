@@ -34,7 +34,7 @@ class Infobox:
         symbols = [symbol] + self.symbols
         loc = self.location
         if (loc is None or loc == '') and len(index) > 0:
-            loc = locations.get(index[0], '')
+            loc = locations.get(f'{index[0]}'.upper(), '')
         return Stock(
             self.name,
             self.name,
