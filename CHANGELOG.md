@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.7.7 (2021-07-09)
+### Fix
+* Improved fallback location ([`45754b0`](https://github.com/portfolioplus/pysymbolscanner/commit/45754b0672f5c7294635a82e21f6bf7ead344661))
+
 ## v1.7.6 (2021-07-07)
 ### Fix
 * Fallback location ([`8d5bef9`](https://github.com/portfolioplus/pysymbolscanner/commit/8d5bef90bddc5aba2dd6a4ab6172ea2d97049b15))
