@@ -74,6 +74,12 @@ locations = {
 }
 
 
+def fallback_location(index, loc):
+    if (loc is None or loc == '') and len(index) > 0:
+        loc = locations.get(f'{index[0]}'.upper(), '')
+    return loc
+
+
 def remove_most_common_endings(company):
     for end in most_common_endings:
         company = company.replace(f' {end}', '')

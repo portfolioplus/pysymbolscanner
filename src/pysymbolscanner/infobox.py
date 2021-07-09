@@ -5,7 +5,7 @@ from unidecode import unidecode
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.word_score import get_best_match
 from pysymbolscanner.const import long_to_short
-from pysymbolscanner.const import locations
+from pysymbolscanner.const import fallback_location
 
 
 class Infobox:
@@ -32,9 +32,7 @@ class Infobox:
 
     def to_stock(self, index, symbol):
         symbols = [symbol] + self.symbols
-        loc = self.location
-        if (loc is None or loc == '') and len(index) > 0:
-            loc = locations.get(f'{index[0]}'.upper(), '')
+        loc = fallback_location(index, self.location)
         return Stock(
             self.name,
             self.name,

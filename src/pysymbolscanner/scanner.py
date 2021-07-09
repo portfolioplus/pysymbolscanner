@@ -23,6 +23,7 @@ from pysymbolscanner.stock import Stock
 from pysymbolscanner.wiki import get_merged_infobox, get_wiki_url
 from pysymbolscanner.word_score import deep_search, get_best_match
 from pysymbolscanner.yahoo import YahooSearch
+from pysymbolscanner.const import fallback_location
 
 
 class SymbolScanner:
@@ -252,6 +253,7 @@ class SymbolScanner:
             self.log.warn(
                 f'Did not find any wikipedia data for {stock.wiki_name}'
             )
+            stock.country = fallback_location(stock.indices, stock.country)
             return stock
         return infobox.to_stock(stock.indices, stock.symbol)
 
