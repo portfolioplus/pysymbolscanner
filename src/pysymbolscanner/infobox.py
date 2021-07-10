@@ -230,6 +230,8 @@ def get_country(loc, mystr):
     mystr = 'United Kingdom' if 'Jersey' in mystr else mystr
     mystr = 'Germany' if 'Berlin' in mystr and loc == 'en' else mystr
     mystr = 'Deutschland' if 'Berlin' in mystr and loc == 'de' else mystr
+    mystr = 'Deutschland' if 'Düsseldorf' in mystr and loc == 'de' else mystr
+    mystr = 'Germany' if 'Düsseldorf' in mystr and loc == 'en' else mystr
     mystr = 'United Kingdom' if 'Addlestone' in mystr else mystr
     mystr = 'France' if 'Vertou' in mystr and loc == 'en' else mystr
     mystr = 'Frankreich' if 'Vertou' in mystr and loc == 'de' else mystr
