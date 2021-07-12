@@ -1,6 +1,6 @@
 from json import JSONDecodeError
 
-from uplink import Consumer, Query, get, returns
+from uplink import Consumer, Query, get, returns, headers
 
 from pysymbolscanner.const import remove_most_common_endings, long_to_short
 from pysymbolscanner.word_score import get_score
@@ -14,6 +14,16 @@ class YahooSearch(Consumer):
     def __init__(self):
         super().__init__(base_url=YahooSearch.BASE_URL)
 
+    @headers(
+        {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) '
+            'AppleWebKit/537.36 (KHTML, like Gecko) '
+            'Chrome/75.0.3770.142 Safari/537.36',
+            'Accept-Encoding': 'gzip, deflate',
+            'Accept': '*/*',
+            'Connection': 'keep-alive',
+        }
+    )
     @returns.json()
     @get('/v1/finance/search')
     def search(
