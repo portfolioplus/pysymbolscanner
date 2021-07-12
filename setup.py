@@ -24,6 +24,7 @@ INSTALL_REQUIRES = [
     'Unidecode==1.2.0',
     'uplink==0.9.4',
     'pytickersymbols>=1.6.0',
+    'toolz==0.11.1'
 ]
 
 with open('src/pysymbolscanner/__init__.py', 'r') as fd:

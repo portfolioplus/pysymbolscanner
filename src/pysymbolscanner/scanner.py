@@ -10,20 +10,21 @@ import logging
 import multiprocessing
 import os
 import pickle
+import random
 import sys
 
 import pandas as pd
 import requests
+import toolz
 from bs4 import BeautifulSoup
 from pytickersymbols import PyTickerSymbols
 
-from pysymbolscanner.const import most_common_endings
+from pysymbolscanner.const import fallback_location, most_common_endings
 from pysymbolscanner.index_definitions import Indices
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.wiki import get_merged_infobox, get_wiki_url
 from pysymbolscanner.word_score import deep_search, get_best_match
 from pysymbolscanner.yahoo import YahooSearch
-from pysymbolscanner.const import fallback_location
 
 
 class SymbolScanner:
@@ -63,12 +64,34 @@ class SymbolScanner:
                 result[index] = stocks_with_yahoo_symbols
         return result
 
+    def start_yahoo_symbol(self, min_chose_size, random_chose_size):
+        stock_data = PyTickerSymbols()
+        result = {}
+        with multiprocessing.Pool(processes=self.MAX_PROCESSES * 4) as pool:
+            for index in stock_data.get_all_indices():
+                args = list(
+                    sorted(
+                        map(
+                            lambda stock: Stock.from_pyticker(stock),
+                            stock_data.get_stocks_by_index(index)
+                        ),
+                        key=lambda stock: len(stock.symbols),
+                    )
+                )
+                # reduce workload because of yahoo finance ban
+                if min_chose_size + random_chose_size < len(args):
+                    args = args[:min_chose_size] + random.sample(
+                        args, random_chose_size
+                    )
+                    toolz.unique(args, key=lambda x: x.name)
+                stocks_with_yahoo_symbols = pool.map(self.worker_yahoo, args)
+                result[index] = stocks_with_yahoo_symbols
+        return result
+
     def worker_yahoo(self, stock):
         search = YahooSearch()
         if not stock.name:
-            self.log.warn(
-                f'Item without name {stock}'
-            )
+            self.log.warn(f'Item without name {stock}')
             return stock
         symbols = search.get_symbols(stock.name)
         stock.yahoo_symbols = symbols

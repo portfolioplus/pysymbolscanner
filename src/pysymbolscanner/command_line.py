@@ -144,6 +144,7 @@ def symbolscanner_app():
     """
     parser = argparse.ArgumentParser(description='SymbolScanner CLI')
     parser.add_argument('--cache', action='store_true', default=False)
+    parser.add_argument('--symbols', action='store_true', default=False)
     parser.add_argument(
         '-i',
         '--input',
@@ -162,17 +163,21 @@ def symbolscanner_app():
     args = parser.parse_args()
     stock_data = PyTickerSymbols()
     scanner = SymbolScanner(args.cache)
-    scanner.start()
+    if not args.symbols:
+        scanner.start()
+    else:
+        scanner.data = scanner.start_yahoo_symbol(5, 15)
     indices = stock_data.get_all_indices()
     stocks_yaml = None
     with open(args.input, 'r', encoding='utf8') as in_file:
         stocks_yaml = yaml.safe_load(in_file)
-        for index in indices:
-            missing = get_missing_objects(index, scanner, stock_data)
-            wrong = get_wrong_objects(index, scanner, stock_data)
-            stocks_yaml = fix_wrong(wrong, index, stocks_yaml)
-            stocks_yaml = fix_missing(missing, index, stocks_yaml)
-        stocks_yaml = fix_symbols(stocks_yaml)
+        if not args.symbols:
+            for index in indices:
+                missing = get_missing_objects(index, scanner, stock_data)
+                wrong = get_wrong_objects(index, scanner, stock_data)
+                stocks_yaml = fix_wrong(wrong, index, stocks_yaml)
+                stocks_yaml = fix_missing(missing, index, stocks_yaml)
+            stocks_yaml = fix_symbols(stocks_yaml)
         stocks_yaml = update_stocks(stocks_yaml, scanner)
     with open(args.output, 'w') as out_file:
         yaml.safe_dump(

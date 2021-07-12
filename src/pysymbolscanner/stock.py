@@ -48,6 +48,23 @@ class Stock:
             0,
         )
 
+    @classmethod
+    def from_pyticker(cls, stock):
+        return cls(
+            stock.get('name', ''),
+            stock.get('wiki_name', ''),
+            '',
+            '',
+            stock.get('symbol', ''),
+            stock.get('country', ''),
+            stock.get('indices', []),
+            stock.get('industries', []),
+            stock.get('symbols', []),
+            stock.get('isins', []),
+            stock.get('metadata', {}).get('founded', 0),
+            stock.get('metadata', {}).get('employees', 0)
+        )
+
     def to_pyticker_symbol(self):
         sym = self.symbol
         symbols = self.get_symbols(self.symbols)
@@ -197,6 +214,9 @@ class Stock:
 
     @staticmethod
     def get_symbols(symbols):
+        # skip if allready transformed
+        if all(map(lambda x: isinstance(x, dict), symbols)):
+            return symbols
         if not symbols:
             return []
         result = []
