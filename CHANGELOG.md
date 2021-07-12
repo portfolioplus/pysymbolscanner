@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.8.0 (2021-07-12)
+### Feature
+* Added symbol scan ([`f60b5a9`](https://github.com/portfolioplus/pysymbolscanner/commit/f60b5a9a393cb6027f493eb29bfbacfa91239079))
+
 ## v1.7.8 (2021-07-12)
 ### Fix
 * Blocked yahoo search ([`88a9813`](https://github.com/portfolioplus/pysymbolscanner/commit/88a9813fdb4327117c3de5e0f4f7cefa71b78fc1))
