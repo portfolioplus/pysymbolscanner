@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.7.8 (2021-07-12)
+### Fix
+* Blocked yahoo search ([`88a9813`](https://github.com/portfolioplus/pysymbolscanner/commit/88a9813fdb4327117c3de5e0f4f7cefa71b78fc1))
+
 ## v1.7.7 (2021-07-09)
 ### Fix
 * Improved fallback location ([`45754b0`](https://github.com/portfolioplus/pysymbolscanner/commit/45754b0672f5c7294635a82e21f6bf7ead344661))
