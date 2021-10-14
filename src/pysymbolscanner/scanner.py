@@ -342,21 +342,23 @@ class SymbolScanner:
         soup = BeautifulSoup(html, 'html.parser')
         table = soup.findAll('table')[table_id]
         links = []
-        index = -1
-        for row in table.findAll('tr'):
-            column_names = row.findAll('th')
-            if index == -1:
-                index = SymbolScanner._get_col_id(col_name, column_names)
+        column_names = table.findAll('th')
+        index = SymbolScanner._get_col_id(col_name, column_names)
+        rows = table.find_all('tr')
+        for idx, row in enumerate(rows):
+            cells = row.find_all(True)
+            if not cells:
                 continue
-            tr = row.findAll('td')[index]
+            cell = cells[index]
             try:
-                link = tr.find('a')['href']
+                link = cell.find('a')['href']
                 if 'action=edit' not in link:
                     links.append(link)
                 else:
                     links.append('')
             except (KeyError, TypeError):
-                links.append('')
+                if idx > 0:
+                    links.append('')
         return links
 
     @staticmethod
