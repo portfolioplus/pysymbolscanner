@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.8.1 (2021-10-14)
+### Fix
+* Improves the felxibility of index table parsers ([`3f0e4e0`](https://github.com/portfolioplus/pysymbolscanner/commit/3f0e4e063588862d58c74186045dddb9180815bb))
+
 ## v1.8.0 (2021-07-12)
 ### Feature
 * Added symbol scan ([`f60b5a9`](https://github.com/portfolioplus/pysymbolscanner/commit/f60b5a9a393cb6027f493eb29bfbacfa91239079))
