@@ -7,6 +7,10 @@
 """
 import re
 
+block_list_symbol_scanner = [
+    'Elis S.A.', 'Elisa Oyj'
+]
+
 most_common_endings = [
     'GmbH & Co. Kommanditgesellschaft auf Aktien',
     'Compagnie Générale des Établissements',

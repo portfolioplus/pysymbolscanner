@@ -19,7 +19,11 @@ import toolz
 from bs4 import BeautifulSoup
 from pytickersymbols import PyTickerSymbols
 
-from pysymbolscanner.const import fallback_location, most_common_endings
+from pysymbolscanner.const import (
+    fallback_location,
+    most_common_endings,
+    block_list_symbol_scanner,
+)
 from pysymbolscanner.index_definitions import Indices
 from pysymbolscanner.stock import Stock
 from pysymbolscanner.wiki import get_merged_infobox, get_wiki_url
@@ -73,7 +77,11 @@ class SymbolScanner:
                     sorted(
                         map(
                             lambda stock: Stock.from_pyticker(stock),
-                            stock_data.get_stocks_by_index(index)
+                            filter(
+                                lambda x: x['name']
+                                not in block_list_symbol_scanner,
+                                stock_data.get_stocks_by_index(index),
+                            ),
                         ),
                         key=lambda stock: len(stock.symbols),
                     )
