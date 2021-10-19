@@ -26,9 +26,10 @@ from pysymbolscanner.const import (
 )
 from pysymbolscanner.index_definitions import Indices
 from pysymbolscanner.stock import Stock
-from pysymbolscanner.wiki import get_merged_infobox, get_wiki_url
+from pysymbolscanner.wiki import get_merged_infobox
 from pysymbolscanner.word_score import deep_search, get_best_match
 from pysymbolscanner.yahoo import YahooSearch
+from pysymbolscanner.utils import get_wiki_url
 
 
 class SymbolScanner:

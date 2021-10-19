@@ -52,6 +52,7 @@ most_common_endings = [
     'Oyj',
     '(Unternehmen)',
     '(Company)',
+    'Intercontinental'
 ]
 
 blocklist_search = ['SDAX', 'MDAX', 'TecDAX', 'S&P 500', 'IBEX 35']

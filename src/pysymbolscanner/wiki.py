@@ -6,8 +6,7 @@ from pysymbolscanner.const import (
     most_common_endings,
     remove_most_common_endings,
 )
-import requests
-from bs4 import BeautifulSoup
+from pysymbolscanner.utils import get_wiki_page_title_and_links
 
 
 def _get_infobox_of_page(name, check_item, lang):
@@ -116,23 +115,6 @@ def get_infobox(page_search, lang_codes=['en', 'de', 'es', 'fr']):
     return parsed_infobox
 
 
-def get_wiki_page_title_and_links(link, lang_codes):
-    get_url = requests.get(link)
-    get_text = get_url.text
-    soup = BeautifulSoup(get_text, "html.parser")
-    company = soup.find('h1').text
-    links = soup.findAll(
-        'a', href=True, attrs={'class': 'interlanguage-link-target'}
-    )
-    links = list(
-        filter(
-            lambda x: x[1] in lang_codes,
-            map(lambda x: (x['href'], x['lang']), links),
-        )
-    )
-    return company, links
-
-
 def get_merged_infobox(page_search, link, link_lang, lang_codes=None):
     if lang_codes is None:
         lang_codes = ['en', 'de', 'es', 'fr']
@@ -166,7 +148,3 @@ def get_merged_infobox(page_search, link, link_lang, lang_codes=None):
             result = infobox
 
     return result
-
-
-def get_wiki_url(lang, title):
-    return f'https://{lang}.wikipedia.org/wiki/{title}'

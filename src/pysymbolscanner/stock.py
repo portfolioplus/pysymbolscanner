@@ -1,4 +1,8 @@
-from pysymbolscanner.utils import filter_duplicate_dicts_in_list
+from pysymbolscanner.utils import (
+    filter_duplicate_dicts_in_list,
+    get_wiki_page_title_and_links,
+    get_wiki_url,
+)
 
 
 class Stock:
@@ -32,9 +36,18 @@ class Stock:
         }
 
     @classmethod
-    def from_wiki(cls, indices, wiki_name, link, link_lang, symbol):
+    def from_wiki(cls, indices, name, link, link_lang, symbol):
+        if link and link_lang:
+            wiki_link = get_wiki_url(link_lang, link)
+            wiki_link = wiki_link.replace('wiki//wiki/', 'wiki/')
+            wiki_name, _ = get_wiki_page_title_and_links(
+                wiki_link,
+                link_lang,
+            )
+        else:
+            wiki_name = ''
         return cls(
-            wiki_name,
+            name,
             wiki_name,
             link,
             link_lang,
@@ -62,7 +75,7 @@ class Stock:
             stock.get('symbols', []),
             stock.get('isins', []),
             stock.get('metadata', {}).get('founded', 0),
-            stock.get('metadata', {}).get('employees', 0)
+            stock.get('metadata', {}).get('employees', 0),
         )
 
     def to_pyticker_symbol(self):
