@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.8.2 (2021-10-19)
+### Fix
+* Wiki name is now evaluated by wiki page ([`f81c02f`](https://github.com/portfolioplus/pysymbolscanner/commit/f81c02f541f897daa4dffa520d82501de3d35900))
+
 ## v1.8.1 (2021-10-14)
 ### Fix
 * Improves the felxibility of index table parsers ([`3f0e4e0`](https://github.com/portfolioplus/pysymbolscanner/commit/3f0e4e063588862d58c74186045dddb9180815bb))
