@@ -6,7 +6,7 @@ from pysymbolscanner.const import (
     most_common_endings,
     remove_most_common_endings,
 )
-from pysymbolscanner.utils import get_wiki_page_title_and_links
+from pysymbolscanner.utils import get_wiki_page_title_and_links, get_wiki_url
 
 
 def _get_infobox_of_page(name, check_item, lang):
