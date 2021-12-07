@@ -23,6 +23,8 @@ def _search(sentence_a, sentence_b, ignore):
 
 
 def get_best_match(word, items, word_filter=[]):
+    if not word:
+        return -1, -1
     if word_filter:
         new_word = _remove(word, word_filter)
         word = new_word if new_word else word
@@ -40,6 +42,8 @@ def get_best_match(word, items, word_filter=[]):
 
 
 def deep_search(word, items, ignore=[]):
+    if not word:
+        return -1, -1
     ignore = list(map(lambda x: x.lower(), ignore))
     word = long_to_short(word)
     result = []

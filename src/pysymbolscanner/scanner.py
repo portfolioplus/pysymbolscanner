@@ -180,6 +180,7 @@ class SymbolScanner:
             stock = wiki_stock.to_pyticker_symbol()
             names = [stock['name'] for stock in stocks]
             names_wiki = [stock.get('wiki_name', '') for stock in stocks]
+            names_wiki = list(filter(lambda x: x != '', names_wiki))
             name_id = self.find_by_symbol(stock, stocks)
 
             if name_id != -1:

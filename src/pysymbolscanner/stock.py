@@ -45,7 +45,7 @@ class Stock:
                 link_lang,
             )
         else:
-            wiki_name = ''
+            wiki_name = name
         return cls(
             name,
             wiki_name,
