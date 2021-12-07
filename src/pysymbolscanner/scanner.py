@@ -356,10 +356,12 @@ class SymbolScanner:
         index = SymbolScanner._get_col_id(col_name, column_names)
         rows = table.find_all('tr')
         for idx, row in enumerate(rows):
-            cells = row.find_all(True)
-            if not cells:
+            tr = row.find_all('td')
+            if not tr:
+                tr = row.find_all(True)
+            if not tr:
                 continue
-            cell = cells[index]
+            cell = tr[index]
             try:
                 link = cell.find('a')['href']
                 if 'action=edit' not in link:
