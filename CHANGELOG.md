@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.8.4 (2021-12-07)
+### Fix
+* Fixed name sync for empty names ([`d1a5018`](https://github.com/portfolioplus/pysymbolscanner/commit/d1a5018d95404dc5356715fa92b19abaffacd960))
+
 ## v1.8.3 (2021-10-20)
 ### Fix
 * Import error ([`3f50518`](https://github.com/portfolioplus/pysymbolscanner/commit/3f505180fae8c105c72c2947fcbc5653e3645a95))
