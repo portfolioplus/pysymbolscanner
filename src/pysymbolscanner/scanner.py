@@ -299,19 +299,15 @@ class SymbolScanner:
             result = dict(map(lambda val: list(val.items())[0], index_results))
             return result
 
-    def worker_index(self, args):
-        key, index_source = args
-        self.log.info(f'________________ parse {index_source.TITLE}')
-        wiki_url = get_wiki_url(index_source.LANG, index_source.TITLE)
-        response = requests.get(wiki_url)
-        dfs = pd.read_html(response.text)
+    def parse_index(self, text, key, index_source):
+        dfs = pd.read_html(text)
         table_id = self.get_table_id(dfs, index_source.ITEMS)
         if table_id == -1:
             raise RuntimeError(f'Could not find index table for {key}')
         df = dfs[table_id]
         try:
             links = self.get_wiki_links(
-                response.text, table_id, index_source.COL_NAME_COMPANY
+                text, table_id, index_source.COL_NAME_COMPANY
             )
         except TypeError:
             raise RuntimeError(f'Could not find company links {key} table')
@@ -327,6 +323,14 @@ class SymbolScanner:
             df = df.rename(columns={index_source.COL_NAME_COMPANY: 'name'})
             df['symbol'] = None
             df = df[['name', 'symbol', 'link']]
+        return df
+
+    def worker_index(self, args):
+        key, index_source = args
+        self.log.info(f'________________ parse {index_source.TITLE}')
+        wiki_url = get_wiki_url(index_source.LANG, index_source.TITLE)
+        response = requests.get(wiki_url)
+        df = self.parse_index(response.text, key, index_source)
         result = {key: []}
         for wiki_name, symbol, link in zip(df.name, df.symbol, df.link):
             stock = Stock.from_wiki(
@@ -356,7 +360,11 @@ class SymbolScanner:
         index = SymbolScanner._get_col_id(col_name, column_names)
         rows = table.find_all('tr')
         for idx, row in enumerate(rows):
-            tr = row.find_all('td')
+            tr = row.find_all(
+                lambda tag: tag.name == 'tr'
+                or tag.name == 'th'
+                or tag.name == 'td'
+            )
             if not tr:
                 tr = row.find_all(True)
             if not tr:
