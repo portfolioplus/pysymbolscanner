@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.8.6 (2021-12-10)
+### Fix
+* Symbol scanner test added ([`bfe0f62`](https://github.com/portfolioplus/pysymbolscanner/commit/bfe0f62f88d450c8bcd7449e7d96ac9035416947))
+
 ## v1.8.5 (2021-12-07)
 ### Fix
 * Improved wiki link finder ([`dbce342`](https://github.com/portfolioplus/pysymbolscanner/commit/dbce34228ce7dc0285e6d6a028a60bf05a816037))
