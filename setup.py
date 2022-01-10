@@ -20,7 +20,7 @@ INSTALL_REQUIRES = [
     'wptools==0.4.17',
     'wikipedia==1.4.0',
     'pandas==1.2.4',
-    'pycountry==20.7.3',
+    'pycountry==22.1.10',
     'Unidecode==1.2.0',
     'uplink==0.9.4',
     'pytickersymbols>=1.6.0',
