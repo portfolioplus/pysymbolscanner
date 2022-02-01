@@ -2,6 +2,6 @@ wheel
 pytest
 pytest-cov
 flake8==3.9.1
-autopep8==1.5.7
+autopep8==1.6.0
 black==22.1.0
 parameterized==0.8.1
