@@ -37,3 +37,25 @@ def get_wiki_page_title_and_links(link, lang_codes):
         )
     )
     return company, links
+
+
+def is_isin(isin_str):
+    """Check if string is a valid ISIN like 'US0378331005'
+    :param isin_str: string to check
+    :return: True if valid, False otherwise
+    """
+    if (
+        len(isin_str) == 12
+        and isin_str[:2].isalpha()
+        and isin_str[2:12].isdigit()
+    ):
+        return True
+    return False
+
+
+def is_not_isin(isin_str):
+    """Check if string is not a valid ISIN
+    :param isin_str: string to check
+    :return: True if not valid, False otherwise
+    """
+    return not is_isin(isin_str)

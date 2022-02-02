@@ -4,7 +4,7 @@ from uplink import Consumer, Query, get, returns, headers
 
 from pysymbolscanner.const import remove_most_common_endings, long_to_short
 from pysymbolscanner.word_score import get_score
-from pysymbolscanner.utils import filter_duplicate_dicts_in_list
+from pysymbolscanner.utils import filter_duplicate_dicts_in_list, is_isin
 
 
 class YahooSearch(Consumer):
@@ -140,7 +140,8 @@ class YahooSearch(Consumer):
         for quote in scored_quotes:
             exchange = quote.get('exchange', '')
             symbol = quote.get('symbol', '')
-            if not symbol or not exchange:
+
+            if not symbol or not exchange and is_isin(symbol):
                 continue
             pyticker_symbol = self._get_pyticker_symbol(exchange, symbol)
             if pyticker_symbol:
