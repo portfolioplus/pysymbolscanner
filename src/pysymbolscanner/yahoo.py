@@ -141,7 +141,7 @@ class YahooSearch(Consumer):
             exchange = quote.get('exchange', '')
             symbol = quote.get('symbol', '')
 
-            if not symbol or not exchange and is_isin(symbol):
+            if not symbol or not exchange or is_isin(symbol):
                 continue
             pyticker_symbol = self._get_pyticker_symbol(exchange, symbol)
             if pyticker_symbol:
