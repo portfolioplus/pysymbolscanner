@@ -23,6 +23,7 @@ class TestUtils(unittest.TestCase):
 
     def test_is_isin(self):
         self.assertTrue(is_isin('US0378331005'))
+        self.assertTrue(is_isin('DE0378331005.F'))
         self.assertFalse(is_isin('US037833100'))
         self.assertFalse(is_isin('U10378331001'))
 

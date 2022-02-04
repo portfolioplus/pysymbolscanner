@@ -45,7 +45,7 @@ def is_isin(isin_str):
     :return: True if valid, False otherwise
     """
     if (
-        len(isin_str) == 12
+        (len(isin_str) == 12 or (len(isin_str) >= 13 and isin_str[12] == '.'))
         and isin_str[:2].isalpha()
         and isin_str[2:12].isdigit()
     ):
