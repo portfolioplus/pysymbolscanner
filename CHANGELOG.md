@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.9.1 (2022-02-03)
+### Fix
+* Fixed symbol filter in yahoo search ([`3126de8`](https://github.com/portfolioplus/pysymbolscanner/commit/3126de89e5ebfce46bfbdfa2dcd105b134e70973))
+
 ## v1.9.0 (2022-02-02)
 ### Feature
 * Added filter for isin ([`f21f6dd`](https://github.com/portfolioplus/pysymbolscanner/commit/f21f6dd01cf4fe7d1c01e5361128c440fcb3ae7c))
