@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.9.2 (2022-02-18)
+### Fix
+* Symbol search ([`7c2e37b`](https://github.com/portfolioplus/pysymbolscanner/commit/7c2e37ba14005f0d9b27425c22568f22f6cbf8e6))
+
 ## v1.9.1 (2022-02-03)
 ### Fix
 * Fixed symbol filter in yahoo search ([`3126de8`](https://github.com/portfolioplus/pysymbolscanner/commit/3126de89e5ebfce46bfbdfa2dcd105b134e70973))
