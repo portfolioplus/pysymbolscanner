@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.9.3 (2022-03-15)
+### Fix
+* Fixed isin check ([`31ff3bf`](https://github.com/portfolioplus/pysymbolscanner/commit/31ff3bf43162484545341c984f36a20eb32f89d4))
+
 ## v1.9.2 (2022-02-18)
 ### Fix
 * Symbol search ([`7c2e37b`](https://github.com/portfolioplus/pysymbolscanner/commit/7c2e37ba14005f0d9b27425c22568f22f6cbf8e6))
