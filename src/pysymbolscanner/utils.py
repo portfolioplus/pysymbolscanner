@@ -47,7 +47,7 @@ def is_isin(isin_str):
     if (
         (len(isin_str) == 12 or (len(isin_str) >= 13 and isin_str[12] == '.'))
         and isin_str[:2].isalpha()
-        and isin_str[2:12].isdigit()
+        and isin_str[2:12].isalnum()
     ):
         return True
     return False

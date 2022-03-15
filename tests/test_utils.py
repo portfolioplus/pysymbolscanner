@@ -33,6 +33,7 @@ class TestUtils(unittest.TestCase):
         self.assertFalse(is_not_isin('US0378331005'))
         self.assertTrue(is_not_isin('US037833100'))
         self.assertTrue(is_not_isin('U10378331001'))
+        self.assertFalse(is_not_isin('US82621P1012.F'))
 
 
 if __name__ == "__main__":
