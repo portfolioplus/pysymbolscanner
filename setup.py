@@ -19,7 +19,7 @@ INSTALL_REQUIRES = [
     'PyYAML==5.4.1',
     'wptools==0.4.17',
     'wikipedia==1.4.0',
-    'pandas==1.4.0',
+    'pandas==1.4.3',
     'pycountry==22.1.10',
     'Unidecode==1.3.2',
     'uplink==0.9.7',
