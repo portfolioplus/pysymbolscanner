@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.10.0 (2022-11-23)
+### Feature
+* Added merge with akas ([`b648dfc`](https://github.com/portfolioplus/pysymbolscanner/commit/b648dfc38d36eb090ddafef7ccc16c425d32943f))
+
 ## v1.9.3 (2022-03-15)
 ### Fix
 * Fixed isin check ([`31ff3bf`](https://github.com/portfolioplus/pysymbolscanner/commit/31ff3bf43162484545341c984f36a20eb32f89d4))
