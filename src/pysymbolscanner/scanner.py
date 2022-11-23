@@ -166,6 +166,11 @@ class SymbolScanner:
     def find_by_symbol_and_country(stock, py_stocks):
         for idx, py_stock in enumerate(py_stocks):
             if (
+                stock['name'] in py_stock['akas']
+                or stock['wiki_name'] in py_stock['akas']
+            ):
+                return idx
+            if (
                 stock['symbol'] == py_stock['symbol']
                 and stock['country'] == py_stock['country']
                 and stock['metadata'] == py_stock['metadata']

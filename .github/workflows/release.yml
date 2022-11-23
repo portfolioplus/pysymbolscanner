@@ -12,7 +12,9 @@ jobs:
       matrix:
         python: [3.8]
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
       - name: Install dependencies
         run: |
           sudo apt-get install libcurl4-openssl-dev
@@ -36,7 +38,7 @@ jobs:
           parallel: true
           debug: true
       - name: Python Semantic Release
-        uses: relekang/python-semantic-release@master
+        uses: relekang/python-semantic-release@v7.32.2
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pypi_token: ${{ secrets.PYPI_TOKEN_PP }}
