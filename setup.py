@@ -21,7 +21,7 @@ INSTALL_REQUIRES = [
     'wikipedia==1.4.0',
     'pandas==1.4.0',
     'pycountry==22.3.5',
-    'Unidecode==1.3.2',
+    'Unidecode==1.3.6',
     'uplink==0.9.7',
     'pytickersymbols>=1.6.0',
     'toolz==0.12.0'
