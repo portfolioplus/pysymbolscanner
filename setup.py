@@ -20,11 +20,11 @@ INSTALL_REQUIRES = [
     'wptools==0.4.17',
     'wikipedia==1.4.0',
     'pandas==1.5.1',
-    'pycountry==22.1.10',
+    'pycountry==22.3.5',
     'Unidecode==1.3.2',
     'uplink==0.9.7',
     'pytickersymbols>=1.6.0',
-    'toolz==0.11.2'
+    'toolz==0.12.0'
 ]
 
 with open('src/pysymbolscanner/__init__.py', 'r') as fd:
