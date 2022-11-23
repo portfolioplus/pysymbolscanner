@@ -70,6 +70,21 @@ class Indices:
             'Name',
             ['en'],
         ),
+        Statics.Indices.US_SP_600: IndexSource(
+            'List_of_S%26P_600_companies',
+            [
+                'Company',
+                'Symbol',
+                'GICS Sector',
+                'GICS Sub-Industry',
+                'SEC filings',
+                'CIK',
+            ],
+            'en',
+            'Symbol',
+            'Company',
+            ['en'],
+        ),
         Statics.Indices.ES_IBEX_35: IndexSource(
             'IBEX_35',
             ['Company', 'Ticker', 'Sector'],
@@ -93,6 +108,14 @@ class Indices:
             'Symbol',
             'Name',
             ['de', 'en'],
+        ),
+        Statics.Indices.DE_CDAX: IndexSource(
+            'Liste_der_im_CDAX_gelisteten_Aktien',
+            ['ISIN', 'Logo', 'Name', 'Sitz'],
+            'de',
+            None,
+            'Name',
+            ['de'],
         ),
         Statics.Indices.FR_CAC_60: IndexSource(
             'CAC_Mid_60',
