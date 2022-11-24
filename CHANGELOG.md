@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.11.0 (2022-11-24)
+### Feature
+* Bump pytickersymbols from 1.12.0 to 1.13.0 ([`9284913`](https://github.com/portfolioplus/pysymbolscanner/commit/92849137f9a845383a217357fbce9ef5a8e69c95))
+
 ## v1.10.0 (2022-11-23)
 ### Feature
 * Added merge with akas ([`b648dfc`](https://github.com/portfolioplus/pysymbolscanner/commit/b648dfc38d36eb090ddafef7ccc16c425d32943f))
