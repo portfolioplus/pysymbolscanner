@@ -2,6 +2,10 @@
 
 <!--next-version-placeholder-->
 
+## v1.12.0 (2022-11-25)
+### Feature
+* Fix dependencies ([`5189835`](https://github.com/portfolioplus/pysymbolscanner/commit/5189835c99f1175dd5d4f68d390524f9b05a64e8))
+
 ## v1.11.0 (2022-11-24)
 ### Feature
 * Bump pytickersymbols from 1.12.0 to 1.13.0 ([`9284913`](https://github.com/portfolioplus/pysymbolscanner/commit/92849137f9a845383a217357fbce9ef5a8e69c95))
