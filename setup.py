@@ -16,15 +16,15 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 INSTALL_REQUIRES = [
-    'PyYAML==5.4.1',
+    'PyYAML==6.0',
     'wptools==0.4.17',
     'wikipedia==1.4.0',
-    'pandas==1.4.0',
+    'pandas==1.5.1',
     'pycountry==22.3.5',
     'Unidecode==1.3.6',
     'uplink==0.9.7',
-    'pytickersymbols>=1.6.0',
-    'toolz==0.12.0'
+    'pytickersymbols>=1.13.0',
+    'toolz==0.12.0',
 ]
 
 with open('src/pysymbolscanner/__init__.py', 'r') as fd:
@@ -47,9 +47,11 @@ setup(
     url="https://github.com/portfolioplus/pysymbolscanner",
     packages=find_packages('src', exclude=EXCLUDE_FROM_PACKAGES),
     install_requires=INSTALL_REQUIRES,
-    entry_points={'console_scripts': [
+    entry_points={
+        'console_scripts': [
             'pysymbolscanner = pysymbolscanner.command_line:symbolscanner_app',
-    ]},
+        ]
+    },
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
