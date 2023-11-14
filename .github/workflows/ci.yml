@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python: [3.8]
+        python: [3.11]
 
     steps:
       - uses: actions/checkout@v2
@@ -25,9 +25,11 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - name: Install dependencies
-        run: pip install tox
+        run: pip install poetry
       - name: Run tests
-        run: tox
+        run: |
+          poetry install --no-interaction
+          poetry run pytest tests/ --junitxml test-results/test.xml --cov src/pysymbolscanner --cov-report term-missing
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1
         if: always()
