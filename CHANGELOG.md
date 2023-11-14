@@ -2,6 +2,13 @@
 
 
 
+## v1.13.0 (2023-11-14)
+
+### Feature
+
+* feat: switch to poetry ([`baffb52`](https://github.com/portfolioplus/pysymbolscanner/commit/baffb529bca3b292387d1aa96f278ab48cd6f250))
+
+
 ## v1.12.1 (2023-11-14)
 
 ### Fix
