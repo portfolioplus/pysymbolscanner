@@ -136,15 +136,17 @@ def get_merged_infobox(page_search, link, link_lang, lang_codes=None):
 
     # get all infobox data for each wikipage
     for lang in lang_codes:
-        if not page_search_dict[lang]:
-            continue
-        infobox = get_infobox(page_search_dict[lang], [lang])
-        if infobox is None:
-            continue
+        try:
+            if not page_search_dict[lang]:
+                continue
+            infobox = get_infobox(page_search_dict[lang], [lang])
+            if infobox is None:
+                continue
 
-        if result:
-            result.update(infobox)
-        else:
-            result = infobox
-
+            if result:
+                result.update(infobox)
+            else:
+                result = infobox
+        except Exception:
+            continue
     return result

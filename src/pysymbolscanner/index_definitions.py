@@ -40,9 +40,9 @@ class Indices:
         ),
         Statics.Indices.GB_FTSE: IndexSource(
             'FTSE_100_Index',
-            ['Company', 'EPIC'],
+            ['Company', 'Ticker'],
             'en',
-            'EPIC',
+            'Ticker',
             'Company',
             ['en', 'de'],
         ),
