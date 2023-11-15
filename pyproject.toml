@@ -33,12 +33,14 @@ build-backend = "poetry.core.masonry.api"
 [tool.semantic_release]
 version_variable = [
     "src/pysymbolscanner/__init__.py:__version__",
-    "pyproject.toml:version"
+]
+version_toml = [
+    "pyproject.toml:tool.poetry.version",
 ]
 branch = "master"
 upload_to_pypi = true
 upload_to_release = true
-build_command = "pip install poetry && poetry publish --build"
+build_command = "pip install poetry && poetry build"
 
 [tool.pytest.ini_options]
 addopts = "tests/ --junitxml test-results/test.xml --cov src/pysymbolscanner --cov-report term-missing"
