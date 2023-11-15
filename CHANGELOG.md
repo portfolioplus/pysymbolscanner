@@ -2,6 +2,17 @@
 
 
 
+## v1.13.1 (2023-11-15)
+
+### Fix
+
+* fix: release ([`814ff06`](https://github.com/portfolioplus/pysymbolscanner/commit/814ff0629a5a1c68f1bbb0d86bd8d74159331007))
+
+### Unknown
+
+* ✨ fix: release ([`786f07e`](https://github.com/portfolioplus/pysymbolscanner/commit/786f07ef768ee4d6c03bccfc9c2b02b3dd004e7c))
+
+
 ## v1.13.0 (2023-11-14)
 
 ### Feature
