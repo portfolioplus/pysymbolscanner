@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysymbolscanner"
-version = "1.12.1"
+version = "1.13.2"
 description = "wiki stock information crawler"
 authors = ["SlashGordon <slash.gordon.dev@gmail.com>"]
 license = "MIT License"
